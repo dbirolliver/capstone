@@ -12,367 +12,341 @@
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen">
-  <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside id="sidebar"
-      class="fixed z-50 w-72 h-full bg-white/90 backdrop-blur-xl border-r border-slate-100/80
-             flex flex-col px-4 pt-6 pb-4 shadow-[0_10px_40px_rgba(15,23,42,0.15)]
-             transition-transform duration-300 -translate-x-full"
-      aria-label="Sidebar">
+<div class="min-h-screen flex flex-col">
 
-      <!-- App logo/title -->
-      <div class="flex items-center gap-3 px-2 mb-6">
-        <div class="h-10 w-10 rounded-2xl bg-emerald-100 flex items-center justify-center">
-          <span class="text-emerald-600 text-xl font-bold">P</span>
-        </div>
-        <div class="flex flex-col">
-          <span class="text-sm font-semibold text-slate-900">Premierlux</span>
-          <span class="text-xs text-slate-400">Inventory System</span>
-        </div>
-      </div>
-
-      <!-- User card -->
-      <div class="px-2 mb-6">
-        <div class="rounded-2xl bg-slate-50 border border-slate-100 px-3 py-3 flex items-center gap-3">
-          <div class="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center">
-            <span class="text-blue-600 text-sm font-semibold">R</span>
+    <!-- Bubbly top navbar -->
+<header class="px-6 pt-4 pb-2 flex justify-center relative z-20">
+      <div class="w-full max-w-6xl flex items-center justify-between gap-4
+                  rounded-full bg-slate-900 text-slate-100 px-5 py-2 shadow-lg">
+        <!-- Left: logo + app name -->
+        <div class="flex items-center gap-2">
+          <div class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center">
+            <span class="text-lg font-bold text-emerald-400">P</span>
           </div>
-          <div class="flex flex-col">
-            <span class="text-sm font-medium text-slate-900">rolli</span>
-            <span class="text-xs text-slate-400">Admin</span>
-          </div>
+          <span class="text-sm font-semibold tracking-tight">Premierlux Inventory</span>
         </div>
-      </div>
 
-      <!-- MAIN label -->
-      <div class="px-2 mb-2">
-        <span class="text-[11px] uppercase tracking-[0.16em] text-slate-400">Main</span>
-      </div>
+        <!-- Center: nav links -->
+        <nav class="flex items-center gap-6 text-xs">
+          <button type="button" onclick="showPage('dashboard')" class="hover:text-white">
+            Home
+          </button>
 
-      <!-- Main nav -->
-      <nav class="flex-1 overflow-y-auto px-1 space-y-1 text-sm">
-        <button type="button" onclick="showPage('dashboard')"
-          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">🏠</span>
-          <span>Dashboard</span>
-        </button>
-
-        <button type="button" onclick="showPage('inventory')"
-          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">📦</span>
-          <span>Inventory</span>
-        </button>
-
-        <button type="button" onclick="showPage('inventory')"
-          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">🛒</span>
-          <span>Reorder Requests</span>
-        </button>
-
-        <button type="button" onclick="showPage('dashboard')"
-          class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-          <span class="flex items-center gap-3">
-            <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">⚙️</span>
-            <span>AI Forecasting</span>
-          </span>
-          <span class="text-[10px] px-2 py-0.5 rounded-full bg-violet-100 text-violet-600 font-medium">AI</span>
-        </button>
-
-         <!-- QR Tracking page -->
-  <button type="button" onclick="showPage('qr')"
-    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-    <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">📷</span>
-    <span>QR Tracking</span>
-  </button>
-
-  <!-- Compliance page -->
-  <button type="button" onclick="showPage('compliance')"
-    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-    <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">✅</span>
-    <span>Compliance</span>
-  </button>
-</nav>
-      <!-- ADMINISTRATION label -->
-      <div class="px-2 mt-4 mb-2">
-        <span class="text-[11px] uppercase tracking-[0.16em] text-slate-400">Administration</span>
-      </div>
-
-      <!-- Admin nav -->
-      <div class="px-1 space-y-1 text-sm">
-        <button type="button" onclick="showPage('branches')"
-          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">⚙️</span>
-          <span>Admin Panel</span>
-        </button>
-
-        <button type="button" onclick="showPage('staff')"
-          class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition">
-          <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">👥</span>
-          <span>User Management</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <div id="mainContent" class="flex-1 flex flex-col min-h-screen transition-all duration-300 ml-0">
-      <!-- Premierlux branding -->
-<div class="mt-6 col-span-1 sm:col-span-2 lg:col-span-4">
-  <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <div>
-      <h2 class="text-lg font-semibold text-slate-900">Premierlux Dental Clinic</h2>
-      <p class="text-xs text-slate-500 mt-1">
-        Centralized inventory, AI‑assisted forecasting, and per‑branch stock tracking for all Premierlux locations.
-      </p>
-      
-    </div>
-
-    
-
-    <div class="flex items-center gap-3">
-      <div class="h-10 w-10 rounded-2xl bg-emerald-100 flex items-center justify-center">
-        <span class="text-emerald-600 text-xl font-bold">P</span>
-      </div>
-      <span class="text-sm font-medium text-slate-600">Premierlux Inventory Dashboard</span>
-    </div>
-  </div>
-</div>
-
-      
-
-      <main class="flex-1 p-6">
-        <!-- Dashboard -->
-        <section id="dashboard-section">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
-              <div class="text-blue-700 font-semibold">Total Inventory</div>
-              <div class="text-3xl font-bold" id="total-inventory">0</div>
-            </div>
-            <div class="rounded-xl bg-yellow-100/60 backdrop-blur-lg p-6 shadow-lg text-center" id="low-stock-card">
-              <div class="text-yellow-700 font-semibold">Low Stock Alerts</div>
-              <div class="text-3xl font-bold" id="low-stock-count">0</div>
-            </div>
-            <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
-              <div class="text-blue-700 font-semibold">Branches</div>
-              <div class="text-3xl font-bold" id="branches-count">0</div>
-            </div>
-            <div class="rounded-xl bg-pink-100/60 backdrop-blur-lg p-6 shadow-lg text-center" id="admin-section">
-              <div class="text-pink-700 font-semibold">Staff Management</div>
-              <div class="text-3xl font-bold">Admin Only</div>
-            </div>
-            
-            
-
-            <!-- AI panels -->
-
-            
-
-            <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4 col-span-1 sm:col-span-2 lg:col-span-4">
-              <!-- Inventory AI Chat -->
-<div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4">
-  <!-- Header -->
-  <div class="flex items-start justify-between mb-3">
-    <div class="flex items-center gap-2">
-      <span class="inline-flex items-center justify-center h-8 w-8 rounded-xl bg-blue-100 text-blue-600">
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16h6a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2 2v7a2 2 0 002 2z" />
-        </svg>
-      </span>
-      <div>
-        <h3 class="text-sm font-semibold text-slate-900">Inventory AI Chat</h3>
-        <p class="text-[11px] text-slate-500">
-          Ask about low stock, item quantities, or quick summaries.
-        </p>
-      </div>
-    </div>
-    <span class="inline-flex items-center rounded-full bg-blue-50 text-blue-600 px-2 py-0.5 text-[10px] font-medium">
-      AI powered
-    </span>
-  </div>
-
-  <!-- Prompt input + button -->
-  <label for="chat-input" class="sr-only">Inventory AI question</label>
-  <div class="relative mb-3">
-    <input
-      id="chat-input"
-      type="text"
-      placeholder="Example: show low stock, quantity of Toothpaste, inventory summary"
-      class="py-2.5 px-3 pr-16 block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
-             placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
-             bg-white/80 shadow-[0_0_0_1px_rgba(148,163,184,0.1)]" />
-    <button
-      type="button"
-      onclick="handleChatSend()"
-      class="absolute inset-y-1 right-1 inline-flex items-center justify-center px-3 rounded-xl
-             bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 focus:outline-none
-             focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
-      Ask
-    </button>
-  </div>
-
-  <!-- Response area -->
-  <div class="relative">
-    <textarea
-      id="chat-output"
-      rows="5"
-      class="block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
-             placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
-             bg-slate-50 resize-none p-2"
-      placeholder="AI response will appear here.">
-    </textarea>
-  </div>
-
-  <p class="mt-1 text-[11px] text-slate-400">
-    Tip: Ask one clear question at a time for best answers.
-  </p>
-</div>
-
-              <!-- Chat -->
-<div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4">
-  <!-- Header -->
-<div class="flex items-start justify-between mb-3">
-  <div class="flex items-center gap-2">
-    <span class="inline-flex items-center justify-center h-8 w-8 rounded-xl bg-emerald-100 text-emerald-600">
-      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-           viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 17l6-6 4 4 8-8" />
-      </svg>
-    </span>
-    <div>
-      <h3 class="text-sm font-semibold text-slate-900">AI Forecast (7‑day)</h3>
-      <p class="text-[11px] text-slate-500">
-        Enter an item name with history to see a basic 7‑day demand forecast.
-      </p>
-    </div>
-  </div>
-  <span class="inline-flex items-center rounded-full bg-emerald-50 text-emerald-600 px-2 py-0.5 text-[10px] font-medium">
-    Demand insight
-  </span>
-</div>
-
-
-  <!-- Prompt input + button -->
-<!-- Prompt input + button -->
-<label for="forecast-input" class="sr-only">Item to forecast</label>
-<div class="relative mb-3">
-  <input
-    id="forecast-input"
-    type="text"
-    placeholder="Example: Toothpaste"
-    class="py-2.5 px-3 pr-20 block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
-           placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500
-           bg-white/80 shadow-[0_0_0_1px_rgba(148,163,184,0.1)]" />
+<!-- Inventory dropdown (click) -->
+<div class="relative" data-menu-root>
   <button
     type="button"
-    onclick="handleForecast()"
-    class="absolute inset-y-1 right-1 inline-flex items-center justify-center px-3 rounded-xl
-           bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 focus:outline-none
-           focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1">
-    Forecast
+    class="hover:text-white flex items-center gap-1 text-xs"
+    onclick="toggleMenu('inventoryMenu')">
+    Inventory
+    <span>▾</span>
   </button>
-</div>
 
-<div class="relative">
-  <textarea
-    id="forecast-output"
-    rows="5"
-    class="block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
-           placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500
-           bg-slate-50 resize-none p-2"
-    placeholder="AI forecast will appear here.">
-  </textarea>
-</div>
-
-<p class="mt-1 text-[11px] text-slate-400">
-  Tip: Include approximate daily usage so AI can forecast more accurately.
-</p>
-
-
-</div>
-            </div>
-          </div>
-
-          <!-- AI Analytics Cards -->
-<div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
-  <!-- AI Inventory Summary -->
-  <div id="aiSummaryCard"
-       class="rounded-2xl bg-white/70 backdrop-blur shadow-sm p-4 flex flex-col gap-3">
-    <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-semibold text-slate-900">AI Inventory Summary</h3>
-        <p class="text-[11px] text-slate-400">
-          Overall health, total cost, and low stock overview.
-        </p>
-      </div>
-      <button type="button"
-        onclick="refreshAiDashboard()"
-        class="inline-flex items-center gap-1 rounded-full bg-blue-600 text-white px-3 py-1 text-[11px] font-medium hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed">
-  <svg id="aiRefreshSpinner" class="hidden w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
-    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-    <path class="opacity-75" d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
-  </svg>
-  <span id="aiRefreshLabel">Refresh</span>
-</button>
-
-    </div>
-<p id="aiSummaryText"
-   class="text-xs text-slate-700 min-h-[3rem] animate-pulse bg-slate-100 rounded-lg px-2 py-1">
-  Loading AI summary...
-</p>
-    <div class="flex items-center justify-between text-[11px] text-slate-400">
-      <span id="aiSummaryStats">Items: –, Total cost: –</span>
-      <span id="aiSummaryUpdated">Last updated: –</span>
-    </div>
-  </div>
-
-  <!-- AI Risk & Opportunities -->
-  <div id="aiRiskCard"
-       class="rounded-2xl bg-white/70 backdrop-blur shadow-sm p-4 flex flex-col gap-3">
-    <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-semibold text-slate-900">AI Risk & Opportunities</h3>
-<p id="aiRiskText"
-   class="text-xs text-slate-700 min-h-[3rem] animate-pulse bg-slate-100 rounded-lg px-2 py-1">
-  Loading AI risks...
-</p>
-      </div>
-      <button type="button"
-              onclick="refreshAiDashboard()"
-              class="inline-flex items-center gap-1 rounded-full bg-emerald-600 text-white px-3 py-1 text-[11px] font-medium hover:bg-emerald-700">
-        Refresh
+  <div
+    id="inventoryMenu"
+    class="absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
+           opacity-0 invisible transition">
+    <div class="p-3 space-y-1 text-xs">
+      <button type="button" onclick="showPage('inventory')"
+              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+        <span>Inventory dashboard</span><span>→</span>
+      </button>
+      <button type="button" onclick="openBatchOverlay()"
+              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+        <span>Add stock batch</span><span>→</span>
+      </button>
+      <button type="button" onclick="showPage('qr')"
+              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+        <span>QR tracking</span><span>→</span>
       </button>
     </div>
-    <p id="aiRiskText" class="text-xs text-slate-700 min-h-[3rem]">
-      Shared with AI summary. Refresh to analyze updated risks.
-    </p>
-    <div class="flex items-center justify-between text-[11px] text-slate-400">
-      <span id="aiRiskLowStock">Low stock items: –</span>
-      <span id="aiRiskUpdated">Last updated: –</span>
+  </div>
+</div>
+
+
+<!-- Compliance dropdown (click) -->
+<div class="relative" data-menu-root>
+  <button
+    type="button"
+    class="hover:text-white flex items-center gap-1 text-xs"
+    onclick="toggleMenu('complianceMenu')">
+    Compliance
+    <span>▾</span>
+  </button>
+
+  <div
+    id="complianceMenu"
+    class="absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
+           opacity-0 invisible transition">
+    <div class="p-3 space-y-1 text-xs">
+      <button type="button" onclick="showPage('compliance')"
+              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+        <span>Compliance dashboard</span><span>→</span>
+      </button>
+      <button type="button" onclick="showPage('inventory')"
+              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+        <span>Expiry checks</span><span>→</span>
+      </button>
     </div>
   </div>
 </div>
 
-        </section>
+
+          <button type="button" onclick="showPage('branches')" class="hover:text-white">Branches</button>
+          <button type="button" onclick="showPage('staff')" class="hover:text-white">Staff</button>
+        </nav>
+
+        <!-- Right: Add stock pill -->
+        <button
+          type="button"
+          onclick="openBatchOverlay()"
+          class="px-4 py-1.5 rounded-full bg-yellow-300 text-slate-900 text-xs font-semibold hover:bg-yellow-200">
+          Add stock
+        </button>
+      </div>
+    </header>
+
+      <!-- Main dashboard area -->
+<main class="flex-1 px-6 pb-8 pt-4 relative z-10">
+  <div class="w-full max-w-5xl mx-auto">
+
+    <!-- Dashboard title -->
+    <div class="mb-4">
+      <h1 class="text-lg font-semibold text-slate-900">Dashboard overview</h1>
+      <p class="text-xs text-slate-500">
+        Inventory health, low stock alerts, and branch status.
+      </p>
+    </div>
+
+    <!-- KPI + AI sections -->
+    <section id="dashboard-section">
+      <!-- KPI cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
+          <div class="text-blue-700 font-semibold">Total Inventory</div>
+          <div class="text-3xl font-bold text-slate-900" id="total-inventory">0</div>
+        </div>
+        <div class="rounded-xl bg-yellow-100/60 backdrop-blur-lg p-6 shadow-lg text-center" id="low-stock-card">
+          <div class="text-yellow-700 font-semibold">Low Stock Alerts</div>
+          <div class="text-3xl font-bold text-slate-900" id="low-stock-count">0</div>
+        </div>
+        <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
+          <div class="text-blue-700 font-semibold">Branches</div>
+          <div class="text-3xl font-bold text-slate-900" id="branches-count">0</div>
+        </div>
+        <div class="rounded-xl bg-pink-100/60 backdrop-blur-lg p-6 shadow-lg text-center" id="admin-section">
+          <div class="text-pink-700 font-semibold">Staff Management</div>
+          <div class="text-3xl font-bold text-slate-900">Admin Only</div>
+        </div>
+      </div>
+
+      <!-- AI Chat + Forecast row -->
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <!-- Inventory AI Chat -->
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4 flex flex-col min-h-[260px] max-w-sm w-full">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center h-8 w-8 rounded-xl bg-blue-100 text-blue-600">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16h6a2 2 0 002-2V7a2 2 0 00-2-2H9a2 2 0 00-2 2v7a2 2 0 002 2z" />
+                </svg>
+              </span>
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">Inventory AI Chat</h3>
+                <p class="text-[11px] text-slate-600">
+                  Ask about low stock, item quantities, or quick summaries.
+                </p>
+              </div>
+            </div>
+            <span class="inline-flex items-center rounded-full bg-blue-50 text-blue-600 px-2 py-0.5 text-[10px] font-medium">
+              AI powered
+            </span>
+          </div>
+
+          <label for="chat-input" class="sr-only">Inventory AI question</label>
+          <div class="relative mb-3">
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Example: show low stock, quantity of Toothpaste, inventory summary"
+              class="py-2.5 px-3 pr-16 block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
+                     placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                     bg-white/80 shadow-[0_0_0_1px_rgba(148,163,184,0.1)]" />
+            <button
+              type="button"
+              onclick="handleChatSend()"
+              class="absolute inset-y-1 right-1 inline-flex items-center justify-center px-3 rounded-xl
+                     bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 focus:outline-none
+                     focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">
+              Ask
+            </button>
+          </div>
+
+          <div class="relative flex-1">
+            <textarea
+              id="chat-output"
+              rows="5"
+              class="block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
+                     placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500
+                     bg-slate-50 resize-none p-2"
+              placeholder="AI response will appear here.">
+            </textarea>
+          </div>
+
+          <p class="mt-1 text-[11px] text-slate-400">
+            Tip: Ask one clear question at a time for best answers.
+          </p>
+        </div>
+
+        <!-- AI Forecast (7-day) -->
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4 flex flex-col min-h-[260px] max-w-sm w-full">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center justify-center h-8 w-8 rounded-xl bg-emerald-100 text-emerald-600">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 17l6-6 4 4 8-8" />
+                </svg>
+              </span>
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">AI Forecast (7-day)</h3>
+                <p class="text-[11px] text-slate-600">
+                  Enter an item name with history to see a basic 7‑day demand forecast.
+                </p>
+              </div>
+            </div>
+            <span class="inline-flex items-center rounded-full bg-emerald-50 text-emerald-600 px-2 py-0.5 text-[10px] font-medium">
+              Demand insight
+            </span>
+          </div>
+
+          <label for="forecast-input" class="sr-only">Item to forecast</label>
+          <div class="relative mb-3">
+            <input
+              id="forecast-input"
+              type="text"
+              placeholder="Example: Toothpaste"
+              class="py-2.5 px-3 pr-20 block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
+                     placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500
+                     bg-white/80 shadow-[0_0_0_1px_rgba(148,163,184,0.1)]" />
+            <button
+              type="button"
+              onclick="handleForecast()"
+              class="absolute inset-y-1 right-1 inline-flex items-center justify-center px-3 rounded-xl
+                     bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 focus:outline-none
+                     focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1">
+              Forecast
+            </button>
+          </div>
+
+          <div class="relative flex-1">
+            <textarea
+              id="forecast-output"
+              rows="5"
+              class="block w-full border border-slate-200 rounded-2xl text-xs text-slate-700
+                     placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500
+                     bg-slate-50 resize-none p-2"
+              placeholder="AI forecast will appear here.">
+            </textarea>
+          </div>
+
+          <p class="mt-1 text-[11px] text-slate-400">
+            Tip: Include approximate daily usage so AI can forecast more accurately.
+          </p>
+        </div>
+
+        <!-- optional third card slot -->
+      </div>
+
+      <!-- AI Analytics Cards row -->
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <!-- AI Inventory Summary -->
+        <div id="aiSummaryCard"
+             class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4 flex flex-col min-h-[260px] max-w-sm w-full">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">AI Inventory Summary</h3>
+              <p class="text-[11px] text-slate-400">
+                Overall health, total cost, and low stock overview.
+              </p>
+            </div>
+            <button type="button"
+                    onclick="refreshAiDashboard()"
+                    class="inline-flex items-center gap-1 rounded-full bg-blue-600 text-white px-3 py-1 text-[11px] font-medium hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed">
+              <svg id="aiRefreshSpinner" class="hidden w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+              </svg>
+              <span id="aiRefreshLabel">Refresh</span>
+            </button>
+          </div>
+
+          <p id="aiSummaryText"
+             class="text-xs text-slate-700 min-h-[3rem] animate-pulse bg-slate-100 rounded-lg px-2 py-1">
+            Loading AI summary...
+          </p>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 mt-auto">
+            <span id="aiSummaryStats">Items: –, Total cost: –</span>
+            <span id="aiSummaryUpdated">Last updated: –</span>
+          </div>
+        </div>
+
+        <!-- AI Risk & Opportunities -->
+        <div id="aiRiskCard"
+          class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4 flex flex-col min-h-[260px] max-w-sm w-full">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">AI Risk & Opportunities</h3>
+              <p class="text-[11px] text-slate-400">
+                Focus on low stock items and 7‑day risk.
+              </p>
+            </div>
+            <button type="button"
+                    onclick="refreshAiDashboard()"
+                    class="inline-flex items-center gap-1 rounded-full bg-emerald-600 text-white px-3 py-1 text-[11px] font-medium hover:bg-emerald-700">
+              Refresh
+            </button>
+          </div>
+
+          <p id="aiRiskText"
+             class="text-xs text-slate-700 min-h-[3rem] animate-pulse bg-slate-100 rounded-lg px-2 py-1">
+            Loading AI risks...
+          </p>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-400 mt-auto">
+            <span id="aiRiskLowStock">Low stock items: –</span>
+            <span id="aiRiskUpdated">Last updated: –</span>
+          </div>
+        </div>
+
+        <!-- optional third analytics card slot -->
+      </div>
+    </section>
+
+  </div>
+
 
         <!-- Inventory -->
 <section id="inventory-section" class="hidden" x-data="{ search: '' }">
   <div class="flex items-center justify-between mb-4">
     <div>
       <h2 class="text-xl font-bold text-blue-700">Inventory</h2>
-      <p class="text-xs text-slate-500">
+      <p class="text-xs text-slate-600">
         Per‑branch stock with quick adjust, batch history, and AI forecast support.
       </p>
     </div>
     <div class="flex flex-wrap items-center gap-3">
       <div>
-        <label for="branchSelect" class="block text-xs font-semibold text-slate-500 mb-1">Branch</label>
+        <label for="branchSelect" class="block text-xs font-semibold text-slate-600 mb-1">Branch</label>
         <select id="branchSelect"
                 class="border rounded-lg px-3 py-2 text-sm min-w-[160px]"></select>
       </div>
       <div>
-        <label class="block text-xs font-semibold text-slate-500 mb-1">Search item</label>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Search item</label>
         <div class="relative">
           <input type="text"
                  x-model="search"
@@ -395,7 +369,7 @@
           </div>
 
           <!-- Empty state (shown by JS when no items) -->
-          <div id="inventoryEmptyState" class="hidden mt-10 flex flex-col items-center justify-center text-center text-slate-500">
+          <div id="inventoryEmptyState" class="hidden mt-10 flex flex-col items-center justify-center text-center text-slate-600">
             <div class="h-12 w-12 rounded-2xl bg-white/70 flex items-center justify-center shadow-sm mb-3">
               📦
             </div>
@@ -414,7 +388,7 @@
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-gray-800">Branches (Admin Panel)</h2>
           </div>
-          <p class="text-xs text-slate-500 mb-4">
+          <p class="text-xs text-slate-600 mb-4">
     Manage Premierlux branches, addresses, and managers. Changes here affect where stock and batches are routed.
   </p>
 
@@ -449,7 +423,7 @@
   <div class="flex items-center justify-between mb-4">
     <div>
       <h2 class="text-xl font-bold text-blue-700">Compliance</h2>
-      <p class="text-xs text-slate-500">
+      <p class="text-xs text-slate-600">
         Track expiry checks, sterilization logs, and stock variance audits.
       </p>
     </div>
@@ -463,21 +437,21 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
     <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-5 py-4">
       <h3 class="text-sm font-semibold text-slate-900">Expiry checks</h3>
-      <p class="text-[11px] text-slate-500 mt-1">
+      <p class="text-[11px] text-slate-600 mt-1">
         Items nearing expiration across all branches.
       </p>
       <p class="mt-3 text-2xl font-bold text-amber-600">0</p>
     </div>
     <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-5 py-4">
       <h3 class="text-sm font-semibold text-slate-900">Sterilization logs</h3>
-      <p class="text-[11px] text-slate-500 mt-1">
+      <p class="text-[11px] text-slate-600 mt-1">
         Recent autoclave / sterilization cycles recorded.
       </p>
       <p class="mt-3 text-2xl font-bold text-emerald-600">0</p>
     </div>
     <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-5 py-4">
       <h3 class="text-sm font-semibold text-slate-900">Stock audits</h3>
-      <p class="text-[11px] text-slate-500 mt-1">
+      <p class="text-[11px] text-slate-600 mt-1">
         Variance checks between system and physical count.
       </p>
       <p class="mt-3 text-2xl font-bold text-slate-700">0</p>
@@ -488,7 +462,7 @@
     <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
       <div>
         <h3 class="text-sm font-semibold text-slate-900">Recent compliance checks</h3>
-        <p class="text-[11px] text-slate-500">
+        <p class="text-[11px] text-slate-600">
           Placeholder table; will be filled from Mongo when backend is ready.
         </p>
       </div>
@@ -496,7 +470,7 @@
     <div class="overflow-x-auto">
       <table class="min-w-full text-xs">
         <thead>
-          <tr class="bg-slate-50 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+          <tr class="bg-slate-50 text-left text-[11px] font-semibold text-slate-600 uppercase tracking-wide">
             <th class="px-4 py-2">Date</th>
             <th class="px-4 py-2">Type</th>
             <th class="px-4 py-2">Branch</th>
@@ -520,7 +494,7 @@
   <div class="flex items-center justify-between mb-4">
     <div>
       <h2 class="text-xl font-bold text-blue-700">QR Tracking</h2>
-      <p class="text-xs text-slate-500">
+      <p class="text-xs text-slate-600">
         Scan or enter QR codes to jump directly to batches and adjust stock.
       </p>
     </div>
@@ -536,7 +510,7 @@
     <div class="rounded-2xl bg-white/80 backdrop-blur shadow-sm px-5 py-4 flex flex-col gap-3">
       <div>
         <h3 class="text-sm font-semibold text-slate-900">Lookup QR code</h3>
-        <p class="text-[11px] text-slate-500">
+        <p class="text-[11px] text-slate-600">
           For now, type or paste the QR code ID. Later this can use the camera.
         </p>
       </div>
@@ -554,7 +528,7 @@
       </div>
       <div
         id="qrLookupResult"
-        class="mt-2 text-[11px] text-slate-500">
+        class="mt-2 text-[11px] text-slate-600">
         No QR search performed yet.
       </div>
     </div>
@@ -564,12 +538,12 @@
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-sm font-semibold text-slate-900">Recent QR activity</h3>
-          <p class="text-[11px] text-slate-500">
+          <p class="text-[11px] text-slate-600">
             When backend is ready, this will list scans (item, action, time, branch).
           </p>
         </div>
       </div>
-      <ul class="mt-2 space-y-2 text-[11px] text-slate-500">
+      <ul class="mt-2 space-y-2 text-[11px] text-slate-600">
         <li class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
           No QR events recorded yet. This is a placeholder for future tracking.
         </li>
@@ -587,7 +561,7 @@
             <div class="flex items-center justify-between mb-4">
               <div>
                 <h2 class="text-lg font-semibold text-slate-900">Add New Inventory Batch</h2>
-                <p class="text-xs text-slate-500">
+                <p class="text-xs text-slate-600">
                   Create a new batch entry so FIFO can be tracked per expiration date.
                 </p>
               </div>
@@ -600,40 +574,40 @@
                 <h3 class="text-sm font-semibold text-slate-800 mb-3">Item Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Item Name *</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Item Name *</label>
                     <input id="batch_item_name" type="text"
                            class="w-full border rounded-lg px-3 py-2 text-sm"
                            placeholder="Enter item name" required>
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">SKU</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">SKU</label>
                     <input id="batch_sku" type="text"
                            class="w-full border rounded-lg px-3 py-2 text-sm"
                            placeholder="Enter SKU">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Branch *</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Branch *</label>
                     <select id="batch_branch"
                             class="w-full border rounded-lg px-3 py-2 text-sm"
                             required></select>
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Monthly Usage</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Usage</label>
                     <input id="batch_monthly_usage" type="number" min="0" value="0"
                            class="w-full border rounded-lg px-3 py-2 text-sm">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Current Stock *</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Current Stock *</label>
                     <input id="batch_current_stock" type="number" min="0" value="0" required
                            class="w-full border rounded-lg px-3 py-2 text-sm">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Reorder Level *</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Reorder Level *</label>
                     <input id="batch_reorder_level" type="number" min="0" value="0" required
                            class="w-full border rounded-lg px-3 py-2 text-sm">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Price (₱)</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Price (₱)</label>
                     <input id="batch_price" type="number" min="0" step="0.01" value="0"
                            class="w-full border rounded-lg px-3 py-2 text-sm">
                   </div>
@@ -644,35 +618,35 @@
                 <h3 class="text-sm font-semibold text-slate-800 mb-3">Batch Information</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Batch Number</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Batch Number</label>
                     <input id="batch_batch_number" type="text"
                            class="w-full border rounded-lg px-3 py-2 text-sm"
                            placeholder="Auto-generated if empty">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Lot Number</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Lot Number</label>
                     <input id="batch_lot_number" type="text"
                            class="w-full border rounded-lg px-3 py-2 text-sm"
                            placeholder="Manufacturer lot number">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Manufacturing Date</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Manufacturing Date</label>
                     <input id="batch_mfg_date" type="date"
                            class="w-full border rounded-lg px-3 py-2 text-sm">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Expiration Date</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Expiration Date</label>
                     <input id="batch_exp_date" type="date"
                            class="w-full border rounded-lg px-3 py-2 text-sm">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">Supplier Batch</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Supplier Batch</label>
                     <input id="batch_supplier_batch" type="text"
                            class="w-full border rounded-lg px-3 py-2 text-sm"
                            placeholder="Supplier batch reference">
                   </div>
                   <div>
-                    <label class="block text-xs font-semibold text-slate-500 mb-1">QR Code ID</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">QR Code ID</label>
                     <input id="batch_qr_code_id" type="text"
                            class="w-full border rounded-lg px-3 py-2 text-sm"
                            placeholder="Auto-generated if empty">
@@ -711,11 +685,11 @@
               </div>
               <div class="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <span class="block text-xs text-slate-500 mb-1">Current stock</span>
+                  <span class="block text-xs text-slate-600 mb-1">Current stock</span>
                   <span id="edit_current_stock" class="font-semibold text-slate-800">0</span>
                 </div>
                 <div>
-                  <span class="block text-xs text-slate-500 mb-1">Action</span>
+                  <span class="block text-xs text-slate-600 mb-1">Action</span>
                   <select id="edit_action"
                           class="w-full border rounded-lg px-2 py-1.5 text-sm">
                     <option value="out">Stock out</option>
@@ -725,12 +699,12 @@
                 </div>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-500 mb-1">Quantity</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Quantity</label>
                 <input id="edit_quantity" type="number" min="0" value="0"
                        class="w-full border rounded-lg px-3 py-2 text-sm">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-500 mb-1">Note (optional)</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Note (optional)</label>
                 <input id="edit_note" type="text"
                        class="w-full border rounded-lg px-3 py-2 text-sm"
                        placeholder="Reason for adjustment">
@@ -755,6 +729,101 @@
           <h2 class="text-xl font-bold text-blue-700 mb-4">Staff</h2>
           <p>Manage staff roles and permissions.</p>
         </section>
+
+        <!-- Analytics (Dribbble-like) -->
+<section id="analytics-section" class="mt-6 bg-transparent">
+  <div class="w-full max-w-6xl mx-auto">
+    <div class="mb-4">
+      <h2 class="text-lg font-semibold text-slate-900">Analytics</h2>
+      <p class="text-xs text-slate-500">Inventory analytics — trends, branch comparisons, top items, and AI insights.</p>
+    </div>
+
+    <!-- KPI row -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
+      <div class="rounded-xl bg-white/40 backdrop-blur-lg p-5 shadow-lg text-center">
+        <div class="text-xs font-semibold text-slate-600">Total inventory value</div>
+        <div class="text-2xl font-bold text-slate-900" id="kpi-total-value">₱0.00</div>
+      </div>
+
+      <div class="rounded-xl bg-white/40 backdrop-blur-lg p-5 shadow-lg text-center">
+        <div class="text-xs font-semibold text-slate-600">Total items</div>
+        <div class="text-2xl font-bold text-slate-900" id="kpi-total-items">0</div>
+      </div>
+
+      <div class="rounded-xl bg-white/40 backdrop-blur-lg p-5 shadow-lg text-center">
+        <div class="text-xs font-semibold text-slate-600">Low stock</div>
+        <div class="text-2xl font-bold text-rose-600" id="kpi-low-stock">0</div>
+      </div>
+
+      <div class="rounded-xl bg-white/40 backdrop-blur-lg p-5 shadow-lg text-center">
+        <div class="text-xs font-semibold text-slate-600">Branches</div>
+        <div class="text-2xl font-bold text-slate-900" id="kpi-branches">0</div>
+      </div>
+    </div>
+
+    <!-- Charts grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <!-- Branch stock chart -->
+      <div class="rounded-2xl bg-white/80 backdrop-blur-md p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">Branch stock comparison</h3>
+            <p class="text-[11px] text-slate-500">Current stock per branch</p>
+          </div>
+          <span class="text-xs text-slate-400" id="branch-chart-updated">—</span>
+        </div>
+        <div class="h-[260px] sm:h-[240px] md:h-[220px]">
+  <canvas id="chart-branch-stock"></canvas>
+</div>
+      </div>
+
+      <!-- Top items -->
+      <div class="rounded-2xl bg-white/80 backdrop-blur-md p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">Top items (by monthly usage)</h3>
+            <p class="text-[11px] text-slate-500">Top 6 items by `monthly_usage` (fallback: quantity)</p>
+          </div>
+          <span class="text-xs text-slate-400" id="top-items-updated">—</span>
+        </div>
+       <div class="h-[260px] sm:h-[240px] md:h-[220px]">
+  <canvas id="chart-branch-stock"></canvas>
+</div>
+      </div>
+
+      <!-- 7-day forecast -->
+      <div class="rounded-2xl bg-white/80 backdrop-blur-md p-4 shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-900">7-day forecast (example)</h3>
+            <p class="text-[11px] text-slate-500">Daily demand estimate based on monthly_usage</p>
+          </div>
+          <span class="text-xs text-slate-400" id="forecast-updated">—</span>
+        </div>
+        <div class="h-[260px] sm:h-[240px] md:h-[220px]">
+  <canvas id="chart-branch-stock"></canvas>
+</div>
+      </div>
+    </div>
+
+    <!-- Low stock list + AI summary -->
+    <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="rounded-2xl bg-white/80 backdrop-blur-md p-4 shadow-sm">
+        <h3 class="text-sm font-semibold text-slate-900">Low stock items</h3>
+        <p class="text-[11px] text-slate-500 mb-2">Items at or below reorder level.</p>
+        <ul id="low-stock-list" class="space-y-2 text-[13px] text-slate-700"></ul>
+      </div>
+
+      <div class="rounded-2xl bg-white/80 backdrop-blur-md p-4 shadow-sm">
+        <h3 class="text-sm font-semibold text-slate-900">AI summary</h3>
+        <p class="text-[11px] text-slate-500 mb-2">Summary & risks from AI dashboard.</p>
+        <div id="ai-analytics-summary" class="text-[13px] text-slate-700 whitespace-pre-wrap"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+      
       </main>
 
       <footer class="text-center py-4 text-gray-500 bg-transparent">
@@ -770,19 +839,34 @@
     const BRANCHES_API_URL = "http://127.0.0.1:5000/api/branches";
     const API_BASE = "http://127.0.0.1:5000";
 
-    // Sidebar hover-open
-    function openSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      if (!sidebar) return;
-      sidebar.classList.remove('-translate-x-full');
-    }
+   
+ function toggleMenu(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
 
-    function closeSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      if (!sidebar) return;
-      sidebar.classList.add('-translate-x-full');
-    }
+    const isOpen = !el.classList.contains('invisible');
 
+    // Close all menus first (any element whose id ends with "Menu")
+    document.querySelectorAll('[id$="Menu"]').forEach(m => {
+      m.classList.add('opacity-0', 'invisible');
+    });
+
+    // If the clicked one was closed, open it
+    if (!isOpen) {
+      el.classList.remove('opacity-0', 'invisible');
+    }
+  }
+
+  // Optional: close menus when clicking outside
+  document.addEventListener('click', (e) => {
+    const root = e.target.closest('[data-menu-root]');
+    if (!root) {
+      document.querySelectorAll('[id$="Menu"]').forEach(m => {
+        m.classList.add('opacity-0', 'invisible');
+      });
+    }
+  });
+    
     // Batch overlay
     function openBatchOverlay() {
       const overlay = document.getElementById('batchOverlay');
@@ -898,7 +982,7 @@ function showPage(page) {
     fetchBranches(renderBranchesTable);
   }
 
-  closeSidebar();
+
 }
 
     // Inventory
@@ -954,15 +1038,15 @@ function showPage(page) {
       <div class="mt-2 flex justify-between items-center">
        <div class="inline-flex items-center gap-1 bg-slate-50 border border-slate-100 rounded-full px-1 shadow-inner">
   <button
-    class="h-7 w-7 flex items-center justify-center rounded-full text-slate-500 text-sm hover:bg-slate-100 active:scale-95 transition"
+    class="h-7 w-7 flex items-center justify-center rounded-full text-slate-600 text-sm hover:bg-slate-100 active:scale-95 transition"
     onclick="adjustItemQuantity('${item.name}','${item.branch}',-1)">
     −
   </button>
-  <span class="px-2 text-[11px] text-slate-500 border-x border-slate-200 select-none">
+  <span class="px-2 text-[11px] text-slate-600 border-x border-slate-200 select-none">
     adjust
   </span>
   <button
-    class="h-7 w-7 flex items-center justify-center rounded-full text-slate-500 text-sm hover:bg-slate-100 active:scale-95 transition"
+    class="h-7 w-7 flex items-center justify-center rounded-full text-slate-600 text-sm hover:bg-slate-100 active:scale-95 transition"
     onclick="adjustItemQuantity('${item.name}','${item.branch}',1)">
     +
   </button>
@@ -1368,26 +1452,6 @@ async function refreshAiDashboard() {
 }
 
 
-
-
-    // Sidebar hover behaviour
-    document.addEventListener('mousemove', (event) => {
-      const sidebar = document.getElementById('sidebar');
-      if (!sidebar) return;
-      const isHidden = sidebar.classList.contains('-translate-x-full');
-      if (event.clientX <= 10 && isHidden) openSidebar();
-      if (event.clientX > 260 && !sidebar.contains(event.target)) closeSidebar();
-    });
-
-    document.addEventListener('click', (event) => {
-      const sidebar = document.getElementById('sidebar');
-      if (!sidebar) return;
-      const isHidden = sidebar.classList.contains('-translate-x-full');
-      if (isHidden) return;
-      const clickedInside = sidebar.contains(event.target);
-      if (!clickedInside && event.clientX > 260) closeSidebar();
-    });
-
     // Init
     window.onload = function () {
       const branchSelectEl = document.getElementById('branchSelect');
@@ -1402,6 +1466,254 @@ async function refreshAiDashboard() {
       loadAiDashboard();
 
     };
+    
   </script>
+  <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+(function () {
+  // safe references to your API_URL, BRANCHES_API_URL and API_BASE from the page
+  const INV_API = (typeof API_URL !== 'undefined') ? API_URL : "/api/inventory";
+  const BR_API = (typeof BRANCHES_API_URL !== 'undefined') ? BRANCHES_API_URL : "/api/branches";
+  const AI_API = (typeof API_BASE !== 'undefined') ? API_BASE + "/api/ai/dashboard" : "/api/ai/dashboard";
+
+  // chart instances (we keep references to destroy/replace as needed)
+  let branchChart = null;
+  let topItemsChart = null;
+  let forecastChart = null;
+
+  // helpers to normalize item records (handles item_name vs name, current_stock vs quantity)
+  function normalizeItem(it) {
+    return {
+      id: it._id || it.id || null,
+      name: it.item_name || it.name || it.item || "Unnamed",
+      branch: it.branch || "No branch",
+      stock: Number(it.current_stock ?? it.quantity ?? it.stock ?? 0),
+      monthly_usage: Number(it.monthly_usage ?? it.monthlyUsage ?? 0),
+      price: Number(it.price ?? it.unit_price ?? 0),
+      reorder_level: Number(it.reorder_level ?? it.reorderLevel ?? 0),
+      created_at: it.created_at || it.mfg_date || null
+    };
+  }
+
+  // fetch inventory + branches + ai
+  async function fetchAnalyticsData() {
+    try {
+      const [invRes, branchesRes, aiRes] = await Promise.all([
+        fetch(INV_API).then(r => r.json()).catch(() => []),
+        fetch(BR_API).then(r => r.json()).catch(() => []),
+        fetch(AI_API).then(r => r.json()).catch(() => null)
+      ]);
+
+      // inventory may be plain array or mixed documents; normalize
+      const items = (Array.isArray(invRes) ? invRes : (invRes.items || []))
+        .map(normalizeItem);
+
+      const branches = Array.isArray(branchesRes) ? branchesRes : (branchesRes.branches || []);
+      const ai = aiRes;
+
+      applyAnalytics(items, branches, ai);
+    } catch (err) {
+      console.error("fetchAnalyticsData error", err);
+    }
+  }
+
+  function currency(v) {
+    try {
+      return "₱" + Number(v).toFixed(2);
+    } catch {
+      return "₱0.00";
+    }
+  }
+
+  function applyAnalytics(items, branches, ai) {
+    // KPI: total value, items count, low stock count, branches count
+    const totalValue = items.reduce((s, it) => s + (it.price * it.stock), 0);
+    const totalItems = items.length;
+    const lowStock = items.filter(it => it.stock <= it.reorder_level);
+    const branchesCount = branches.length;
+
+    document.getElementById('kpi-total-value').textContent = currency(totalValue);
+    document.getElementById('kpi-total-items').textContent = totalItems;
+    document.getElementById('kpi-low-stock').textContent = lowStock.length;
+    document.getElementById('kpi-branches').textContent = branchesCount;
+
+    // branch stock chart data
+    const branchSums = {};
+    items.forEach(it => {
+      const b = it.branch || "No branch";
+      branchSums[b] = (branchSums[b] || 0) + it.stock;
+    });
+    const branchLabels = Object.keys(branchSums);
+    const branchValues = branchLabels.map(l => branchSums[l]);
+
+    renderBarChart('chart-branch-stock', branchLabels, branchValues, chart => {
+      branchChart = chart;
+    });
+
+    // top items by monthly_usage (fall back to stock if usage missing)
+    const itemsSorted = items.slice().sort((a,b) => {
+      const av = a.monthly_usage || a.stock || 0;
+      const bv = b.monthly_usage || b.stock || 0;
+      return bv - av;
+    }).slice(0, 6);
+    const topLabels = itemsSorted.map(i => i.name);
+    const topValues = itemsSorted.map(i => (i.monthly_usage || i.stock || 0));
+    renderBarChart('chart-top-items', topLabels, topValues, chart => {
+      topItemsChart = chart;
+    });
+
+    // low stock list
+    const lowListEl = document.getElementById('low-stock-list');
+    lowListEl.innerHTML = '';
+    if (lowStock.length === 0) {
+      lowListEl.innerHTML = '<li class="text-sm text-slate-500">No low stock items.</li>';
+    } else {
+      lowStock.forEach(it => {
+        const li = document.createElement('li');
+        li.className = 'flex items-center justify-between px-3 py-2 bg-slate-50 rounded-lg border';
+        li.innerHTML = `<div>
+            <div class="font-semibold text-slate-800 text-sm">${it.name}</div>
+            <div class="text-[12px] text-slate-500">${it.branch} • Reorder at ${it.reorder_level}</div>
+          </div>
+          <div class="text-sm font-semibold ${it.stock <= it.reorder_level ? 'text-rose-600' : 'text-slate-700'}">
+            ${it.stock}
+          </div>`;
+        lowListEl.appendChild(li);
+      });
+    }
+
+    // AI summary block (if provided)
+    const aiSummaryEl = document.getElementById('ai-analytics-summary');
+    if (ai) {
+      const parts = [];
+      if (ai.summary_text) parts.push(ai.summary_text);
+      if (ai.risk_text) parts.push("Risk: " + ai.risk_text);
+      if (ai.low_stock_count !== undefined) parts.push(`Low stock items: ${ai.low_stock_count}`);
+      if (ai.total_items !== undefined) parts.push(`Total items: ${ai.total_items}`);
+      aiSummaryEl.textContent = parts.join("\n\n");
+    } else {
+      aiSummaryEl.textContent = "No AI analytics available.";
+    }
+
+    // 7-day forecast chart: pick a sample item or aggregated forecast
+    // We'll compute an aggregated daily usage estimate from monthly_usage.
+    // This is an example — for better accuracy use historical time series from backend.
+    const aggregatedDaily = items.reduce((s,it) => s + (it.monthly_usage || it.stock/4 || 0), 0) / Math.max(1, items.length);
+    const forecastLabels = [...Array(7)].map((_,i) => {
+      const d = new Date(); d.setDate(d.getDate() + i + 1);
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    });
+    // produce simple decaying/randomized forecast around aggregatedDaily
+    const forecastValues = forecastLabels.map((_,i) => {
+      const base = aggregatedDaily;
+      const noise = (Math.sin(i+1) + Math.cos(i+2)) * 0.08 * base;
+      return Math.max(0, Number((base + noise).toFixed(2)));
+    });
+
+    renderLineChart('chart-7day-forecast', forecastLabels, forecastValues, chart => {
+      forecastChart = chart;
+    });
+
+    // update small timestamp markers
+    const nowMark = new Date().toLocaleString();
+    document.getElementById('branch-chart-updated').textContent = nowMark;
+    document.getElementById('top-items-updated').textContent = nowMark;
+    document.getElementById('forecast-updated').textContent = nowMark;
+  }
+
+  // render bar chart helper using Chart.js
+  function renderBarChart(canvasId, labels, values, cb) {
+    const el = document.getElementById(canvasId);
+    if (!el) return;
+    if (el.chartInstance) {
+      el.chartInstance.destroy();
+    }
+    const ctx = el.getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: '',
+          data: values,
+          borderRadius: 6,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 0, autoSkip: false } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+    el.chartInstance = chart;
+    if (typeof cb === 'function') cb(chart);
+  }
+
+  // render line chart helper using Chart.js
+  function renderLineChart(canvasId, labels, values, cb) {
+    const el = document.getElementById(canvasId);
+    if (!el) return;
+    if (el.chartInstance) {
+      el.chartInstance.destroy();
+    }
+    const ctx = el.getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: '',
+          data: values,
+          fill: true,
+          tension: 0.35,
+          pointRadius: 3,
+          pointHoverRadius: 5
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { maxRotation: 0 } },
+          y: { beginAtZero: true }
+        }
+      }
+    });
+    el.chartInstance = chart;
+    if (typeof cb === 'function') cb(chart);
+  }
+
+  // Public init
+  window.initInventoryAnalytics = function () {
+    fetchAnalyticsData();
+    // refresh every 90s while the page is open (optional)
+    if (window._analyticsInterval) clearInterval(window._analyticsInterval);
+    window._analyticsInterval = setInterval(fetchAnalyticsData, 90000);
+  };
+
+  // Kick off when page loads if the analytics section exists
+  document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('analytics-section')) {
+      // small delay to ensure other inits finished
+      setTimeout(() => window.initInventoryAnalytics(), 500);
+    }
+  });
+
+})();
+</script>
+
 </body>
 </html>

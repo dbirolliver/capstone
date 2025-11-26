@@ -339,6 +339,51 @@ def add_branch():
     branches_collection.insert_one(doc)
     return jsonify({"message": "Branch added"}), 201
 
+# ---------- KPI ENDPOINTS (Dashboard cards) ----------
+
+@app.route("/api/low-stock-count", methods=["GET"])
+def api_low_stock_count():
+    """
+    Count items where quantity <= reorder_level.
+    """
+    try:
+        count = inventory_collection.count_documents({
+            "$expr": {"$lte": ["$quantity", "$reorder_level"]}
+        })
+        return jsonify({"count": int(count)}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/total-inventory", methods=["GET"])
+def api_total_inventory():
+    """
+    Return the total inventory value = sum(price * quantity) over all items.
+    """
+    try:
+        cursor = inventory_collection.find({}, {"price": 1, "quantity": 1})
+        total_value = 0.0
+        for doc in cursor:
+            price = float(doc.get("price") or 0)
+            qty = float(doc.get("quantity") or 0)
+            total_value += price * qty
+
+        return jsonify({"value": total_value}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/branches-count", methods=["GET"])
+def api_branches_count():
+    """
+    Count all branches.
+    """
+    try:
+        count = branches_collection.count_documents({})
+        return jsonify({"count": int(count)}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 # ---------- Run server ----------
 
 if __name__ == "__main__":

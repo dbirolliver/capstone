@@ -8,6 +8,7 @@ from datetime import datetime
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from datetime import datetime, timezone 
+from datetime import datetime, timedelta
 
 # ---------- Flask + CORS ----------
 
@@ -382,6 +383,145 @@ def api_branches_count():
         return jsonify({"count": int(count)}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+def expiry_within_days(expiry_value, days):
+    """Return True if expiry_value is within <days> days from now."""
+    if not expiry_value:
+        return False
+
+    # If expiry is already a datetime
+    if isinstance(expiry_value, datetime):
+        expiry_dt = expiry_value
+    else:
+        # If you stored it as ISO string like "2025-12-31"
+        try:
+            expiry_dt = datetime.fromisoformat(str(expiry_value))
+        except ValueError:
+            return False
+
+    return expiry_dt <= datetime.utcnow() + timedelta(days=days)
+
+
+
+@app.post("/api/alerts/<alert_id>/acknowledge")
+def acknowledge_alert(alert_id):
+    # TODO: replace with your real auth/current user
+    user_id = request.headers.get("X-User-Id", "demo-admin")
+    user_name = request.headers.get("X-User-Name", "Demo Admin")
+
+    doc = {
+        "alert_id": alert_id,
+        "user_id": user_id,
+        "user_name": user_name,
+        "acknowledged_at": datetime.utcnow().isoformat() + "Z",
+    }
+
+    db.alert_acknowledgements.insert_one(doc)
+    return jsonify({"status": "ok"})
+
+@app.get("/api/alerts")
+def get_alerts():
+    user_id = request.headers.get("X-User-Id", "demo-admin")
+
+    alerts = []
+    low_by_branch = {}
+
+    # 1) Build alerts from inventory
+    items = list(inventory_collection.find({}))  # adjust to your collection name
+
+    for item in items:
+        name = item.get("name")
+        branch = item.get("branch", "Main branch")
+        qty = item.get("quantity", 0)
+        reorder = item.get("reorder_level", 0)
+        expiry = item.get("expiry_date")  # whatever field you use
+
+        # Low stock
+        if reorder and qty <= reorder:
+            alerts.append({
+                "id": f"low-stock-{branch}-{name}",
+                "type": "low_stock",
+                "severity": "high",
+                "title": f"Low stock: {name} – {branch}",
+                "description": f"Current stock {qty}, below reorder point {reorder}.",
+                "branch": branch,
+            })
+            low_by_branch[branch] = low_by_branch.get(branch, 0) + 1
+
+        # Expiring soon
+        if expiry and expiry_within_days(expiry, 30):
+            alerts.append({
+                "id": f"expiry-{branch}-{name}",
+                "type": "expiry_risk",
+                "severity": "medium",
+                "title": f"Expiry soon: {name} – {branch}",
+                "description": "Batch expiring within 30 days.",
+                "branch": branch,
+            })
+
+    # Branch-level low-stock summary
+    for branch, count in low_by_branch.items():
+        if count >= 3:  # threshold
+            alerts.append({
+                "id": f"branch-low-{branch}",
+                "type": "branch_low_stock",
+                "severity": "high",
+                "title": f"Branch alert: {branch} has {count} low‑stock items",
+                "description": "Review this branch inventory and create replenishment orders.",
+                "branch": branch,
+            })
+
+    # 2) Filter out alerts already acknowledged by this user
+    acked_ids = {
+        doc["alert_id"]
+        for doc in db.alert_acknowledgements.find(
+            {"user_id": user_id},
+            {"alert_id": 1, "_id": 0}
+        )
+    }
+
+    visible_alerts = [a for a in alerts if a["id"] not in acked_ids]
+    return jsonify(visible_alerts)
+
+
+@app.get("/api/replenishment/recommendations")
+def get_replenishment_recommendations():
+    items = list(inventory_collection.find({}))  # your inventory collection
+
+    recommendations = []
+
+    for item in items:
+        name = item.get("name")
+        branch = item.get("branch", "Main")
+        qty = item.get("quantity", 0)
+        reorder = item.get("reorder_level", 0)
+
+        # optional extra fields
+        avg_daily_usage = item.get("avg_daily_usage", 1)      # fallback 1
+        lead_time_days = item.get("lead_time_days", 7)        # fallback 7
+        safety_stock = item.get("safety_stock", reorder or 0)
+
+        # basic reorder point formula
+        reorder_point = avg_daily_usage * lead_time_days + safety_stock
+
+        # trigger recommendation if at/below either configured reorder or ROP
+        trigger_level = max(reorder, reorder_point)
+        if qty <= trigger_level:
+            # target stock for next period
+            target_stock = avg_daily_usage * (lead_time_days + 7) + safety_stock
+            suggested_qty = max(int(target_stock - qty), 0)
+
+            if suggested_qty > 0:
+                recommendations.append({
+                    "name": name,
+                    "branch": branch,
+                    "current_quantity": qty,
+                    "reorder_level": reorder,
+                    "reorder_point": reorder_point,
+                    "suggested_order_qty": suggested_qty
+                })
+
+    return jsonify(recommendations)
 
 
 # ---------- Run server ----------

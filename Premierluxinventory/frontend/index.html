@@ -380,6 +380,69 @@
 </div>
 </section>
 
+<!-- Edit Stock Overlay (restore) -->
+<div id="editStockOverlay"
+     class="fixed inset-0 bg-white40 flex items-center justify-center z-50 hidden">
+  <div class="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl w-full max-w-md p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-slate-900">Edit Item Stock</h2>
+      <button type="button"
+              onclick="closeEditStockModal()"
+              class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+    </div>
+
+    <div class="space-y-3 mb-4">
+      <div class="text-sm text-slate-700">
+        <div class="font-semibold" id="edit_item_name"></div>
+        <div class="text-xs text-slate-400" id="edit_item_branch"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <span class="block text-xs text-slate-600 mb-1">Current stock</span>
+          <span id="edit_current_stock" class="font-semibold text-slate-800">0</span>
+        </div>
+        <div>
+          <span class="block text-xs text-slate-600 mb-1">Action</span>
+          <select id="edit_action"
+                  class="w-full border rounded-lg px-2 py-1.5 text-sm">
+            <option value="out">Stock out</option>
+            <option value="in">Stock in</option>
+            <option value="set">Set exact value</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Quantity</label>
+        <input id="edit_quantity" type="number" min="0" value="0"
+               class="w-full border rounded-lg px-3 py-2 text-sm">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Note (optional)</label>
+        <input id="edit_note" type="text"
+               class="w-full border rounded-lg px-3 py-2 text-sm"
+               placeholder="Reason for adjustment">
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center pt-3 border-t border-white/40">
+      <button type="button"
+              onclick="closeEditStockModal()"
+              class="px-4 py-2 rounded-lg border text-sm text-slate-600 hover:bg-white/40">
+        Cancel
+      </button>
+      <button type="button"
+              onclick="submitEditStock()"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+        Save changes
+      </button>
+    </div>
+  </div>
+</div>
+
+
         <!-- Branches / Admin Panel -->
         <section id="branches-section" class="hidden">
           <div class="flex items-center justify-between mb-4">
@@ -744,61 +807,71 @@
           </div>
         </div>
 
-        <!-- Edit Stock Overlay -->
-        <div id="editStockOverlay"
-             class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
-          <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-semibold text-slate-900">Edit Item Stock</h2>
-              <button type="button" onclick="closeEditStockModal()"
-                      class="text-slate-400 hover:text-slate-600 text-xl">×</button>
-            </div>
+<div id="itemDetailsOverlay"
+     class="fixed inset-0 bg-white/40 flex items-center justify-center z-50 hidden">
+  <div class="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl w-full max-w-md p-5 text-sm text-slate-800">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-base font-semibold text-slate-900">Item details</h2>
+      <button type="button"
+              onclick="closeItemDetails()"
+              class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+    </div>
 
-            <div class="space-y-3 mb-4">
-              <div class="text-sm text-slate-700">
-                <div class="font-semibold" id="edit_item_name"></div>
-                <div class="text-xs text-slate-400" id="edit_item_branch"></div>
-              </div>
-              <div class="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <span class="block text-xs text-slate-600 mb-1">Current stock</span>
-                  <span id="edit_current_stock" class="font-semibold text-slate-800">0</span>
-                </div>
-                <div>
-                  <span class="block text-xs text-slate-600 mb-1">Action</span>
-                  <select id="edit_action"
-                          class="w-full border rounded-lg px-2 py-1.5 text-sm">
-                    <option value="out">Stock out</option>
-                    <option value="in">Stock in</option>
-                    <option value="set">Set exact value</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Quantity</label>
-                <input id="edit_quantity" type="number" min="0" value="0"
-                       class="w-full border rounded-lg px-3 py-2 text-sm">
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Note (optional)</label>
-                <input id="edit_note" type="text"
-                       class="w-full border rounded-lg px-3 py-2 text-sm"
-                       placeholder="Reason for adjustment">
-              </div>
-            </div>
+    <div class="space-y-2">
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Name</span>
+        <span id="detail_name" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Branch</span>
+        <span id="detail_branch" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Quantity</span>
+        <span id="detail_quantity" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Reorder level</span>
+        <span id="detail_reorder" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Price (₱)</span>
+        <span id="detail_price" class="flex-1 text-right"></span>
+      </div>
+      <hr class="border-white/40 my-1">
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">SKU</span>
+        <span id="detail_sku" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Batch no.</span>
+        <span id="detail_batch" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Lot no.</span>
+        <span id="detail_lot" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Mfg date</span>
+        <span id="detail_mfg" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Exp date</span>
+        <span id="detail_exp" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">Supplier batch</span>
+        <span id="detail_supplier_batch" class="flex-1 text-right"></span>
+      </div>
+      <div class="flex justify-between gap-3">
+        <span class="font-semibold text-slate-600 w-28">QR code ID</span>
+        <span id="detail_qr" class="flex-1 text-right break-all"></span>
+      </div>
+    </div>
+  </div>
+</div>
 
-            <div class="flex justify-between items-center pt-3 border-t">
-              <button type="button" onclick="closeEditStockModal()"
-                      class="px-4 py-2 rounded-lg border text-sm text-slate-600 hover:bg-slate-50">
-                Cancel
-              </button>
-              <button type="button" onclick="submitEditStock()"
-                      class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
+
 
         <!-- Staff -->
         <section id="staff-section" class="hidden">
@@ -967,6 +1040,14 @@
     </div>
   </div>
 
+  <!--Batch successfully added!-->
+<div id="toast"
+     class="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs shadow-lg hidden z-50">
+  Batch successfully added!
+</div>
+
+
+
   <script>
     let currentUserRole = 'admin';
 // API endpoints
@@ -1008,30 +1089,17 @@ const ALERTS_API_URL = `${API_BASE}/api/alerts`;
   });
     
     // Batch overlay
- function openBatchOverlay() {
+function openBatchOverlay() {
   const overlay = document.getElementById('batchOverlay');
-  if (!overlay) return;
-  overlay.classList.remove('hidden');
+  if (overlay) overlay.classList.remove('hidden');
 
-  const mainSelect = document.getElementById('branchSelect');
-  const batchBranch = document.getElementById('batchbranch');
-
-  if (mainSelect && batchBranch) {
-    batchBranch.innerHTML = '';
-    Array.from(mainSelect.options)
-      .filter(opt => opt.value !== 'All')
-      .forEach(opt => {
-        const o = document.createElement('option');
-        o.value = opt.value;
-        o.textContent = opt.textContent;
-        batchBranch.appendChild(o);
-      });
-
-    if (mainSelect.value !== 'All') {
-      batchBranch.value = mainSelect.value;
-    }
-  }
+  // Load branches for both the main filter and the batch form
+  fetchBranches(branches => {
+    updateBranchSelect(branches);       // existing main dropdown (if you use it)
+    updateBatchBranchSelect(branches);  // NEW: Add Batch dropdown
+  });
 }
+
 
 
     function closeBatchOverlay() {
@@ -1040,45 +1108,46 @@ const ALERTS_API_URL = `${API_BASE}/api/alerts`;
       overlay.classList.add('hidden');
     }
 
-    async function submitBatchForm(e) {
-      e.preventDefault();
-      const payload = {
-        item_name: document.getElementById('batch_item_name').value.trim(),
-        sku: document.getElementById('batch_sku').value.trim(),
-        branch: document.getElementById('batch_branch').value,
-        current_stock: Number(document.getElementById('batch_current_stock').value || 0),
-        monthly_usage: Number(document.getElementById('batch_monthly_usage').value || 0),
-        price: Number(document.getElementById('batch_price').value || 0),
-        reorder_level: Number(document.getElementById('batch_reorder_level').value || 0),
-        batch_number: document.getElementById('batch_batch_number').value.trim(),
-        lot_number: document.getElementById('batch_lot_number').value.trim(),
-        mfg_date: document.getElementById('batch_mfg_date').value,
-        exp_date: document.getElementById('batch_exp_date').value,
-        supplier_batch: document.getElementById('batch_supplier_batch').value.trim(),
-        qr_code_id: document.getElementById('batch_qr_code_id').value.trim()
-      };
+async function submitBatchForm(e) {
+  e.preventDefault();
+  const payload = {
+    item_name: document.getElementById('batch_item_name').value.trim(),
+    sku: document.getElementById('batch_sku').value.trim(),
+    branch: document.getElementById('batch_branch').value,
+    current_stock: Number(document.getElementById('batch_current_stock').value || 0),
+    monthly_usage: Number(document.getElementById('batch_monthly_usage').value || 0),
+    price: Number(document.getElementById('batch_price').value || 0),
+    reorder_level: Number(document.getElementById('batch_reorder_level').value || 0),
+    batch_number: document.getElementById('batch_batch_number').value.trim(),
+    lot_number: document.getElementById('batch_lot_number').value.trim(),
+    mfg_date: document.getElementById('batch_mfg_date').value,
+    exp_date: document.getElementById('batch_exp_date').value,
+    supplier_batch: document.getElementById('batch_supplier_batch').value.trim(),
+    qr_code_id: document.getElementById('batch_qr_code_id').value.trim()
+  };
 
-      try {
-        const res = await fetch(`${API_BASE}/api/batches`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+  try {
+    const res = await fetch(`${API_BASE}/api/batches`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-        const data = await res.json();
-        if (!res.ok) {
-          alert(`Error creating batch: ${data.error || res.statusText}`);
-          return;
-        }
-
-        alert("Batch created successfully");
-        closeBatchOverlay();
-        fetchInventory();
-      } catch (err) {
-        console.error("Batch create error:", err);
-        alert("Could not create batch. Check console for details.");
-      }
+    const data = await res.json();
+    if (!res.ok) {
+      alert(`Error creating batch: ${data.error || res.statusText}`);
+      return;
     }
+
+    showToast('Batch successfully added!');  // small notification
+    closeBatchOverlay();
+    fetchInventory();                        // refresh cards / totals
+  } catch (err) {
+    console.error("Batch create error:", err);
+    alert("Could not create batch. Check console for details.");
+  }
+}
+
 
 // Page switching + analytics
 function showPage(page) {
@@ -1190,6 +1259,7 @@ function fetchReplenishSummary() {
 
 
 // Inventory
+// Inventory
 function renderInventoryCards(items) {
   const container = document.getElementById('inventoryCards');
   const emptyState = document.getElementById('inventoryEmptyState');
@@ -1209,10 +1279,14 @@ function renderInventoryCards(items) {
   }
 
   visibleItems.forEach(item => {
-    const card = document.createElement('div');
-    card.className =
-       "rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-lg px-4 py-3 flex flex-col gap-2 " +
-  "hover:-translate-y-0.5 hover:shadow-xl transition-transform transition-shadow duration-200 cursor-default";
+  const card = document.createElement('div');
+card.className =
+  "rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-lg px-4 py-3 flex flex-col gap-2 " +
+  "hover:-translate-y-0.5 hover:shadow-xl transition-transform transition-shadow duration-200 cursor-pointer";
+
+    // Click card = open details overlay
+    card.onclick = () => openItemDetails(item);
+
     const isLow = item.quantity <= item.reorder_level;
 
     card.innerHTML = `
@@ -1237,50 +1311,39 @@ function renderInventoryCards(items) {
         </div>
       </div>
 
-<div class="mt-2 flex justify-between items-center">
-  <div class="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/40 px-1 shadow-lg">
-    <button
-      class="h-7 w-7 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-slate-700 text-sm hover:bg-white/30 active:scale-95 transition"
-      onclick="adjustItemQuantity('${item.name}','${item.branch}',-1)">
-      −
-    </button>
-    <span class="px-2 text-[11px] text-slate-100 select-none">
-    </span>
-    <button
-      class="h-7 w-7 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-slate-700 text-sm hover:bg-white/30 active:scale-95 transition"
-      onclick="adjustItemQuantity('${item.name}','${item.branch}',1)">
-      +
-    </button>
-  </div>
+      <div class="mt-2 flex justify-between items-center">
+        <div class="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/40 px-1 shadow-lg">
+          <button
+            class="h-7 w-7 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-slate-700 text-sm hover:bg-white/30 active:scale-95 transition"
+             onclick="event.stopPropagation(); adjustItemQuantity('${item.name}','${item.branch}',-1)">
+            −
+          </button>
+          <span class="px-2 text-[11px] text-slate-100 select-none"></span>
+          <button
+            class="h-7 w-7 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-slate-700 text-sm hover:bg-white/30 active:scale-95 transition"
+            onclick="event.stopPropagation(); adjustItemQuantity('${item.name}','${item.branch}',1)">
+            +
+          </button>
+        </div>
 
+        <div class="flex gap-2">
+<button
+  type="button"
+  title="Edit stock"
+  class="h-8 w-8 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-slate-700 hover:bg-white/30 active:scale-95 transition"
+  onclick="event.stopPropagation(); openEditStockModal('${item.name}','${item.branch}',${item.quantity ?? 0})">
+            ✏️
+          </button>
 
-<div class="flex gap-2">
-  <button
-    type="button"
-    title="Edit stock"
-    class="h-8 w-8 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border border-white/40 text-slate-700 hover:bg-white/30 active:scale-95 transition"
-    onclick="openEditStockModal('${item.name}','${item.branch}',${item.quantity ?? 0})">
-    <!-- pencil icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M16.862 3.487a2.25 2.25 0 0 1 3.182 3.182L8.75 17.963 4.5 19.5l1.537-4.25L16.862 3.487z" />
-    </svg>
-  </button>
-
-  <button
-    type="button"
-    title="Delete item"
-    class="h-8 w-8 flex items-center justify-center rounded-full bg-rose-500/10 backdrop-blur-sm border border-rose-300/60 text-rose-600 hover:bg-rose-500/20 active:scale-95 transition"
-    onclick="deleteItem('${item.name}')">
-    <!-- trash icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4.5 7.5h15" />
-      <path d="M9.75 4.5h4.5l.75 3h-6z" />
-      <path d="M9.75 10.5v6m4.5-6v6" />
-      <path d="M6.75 7.5 7.5 19.5h9l.75-12" />
-    </svg>
-  </button>
-</div>
-</div>
+          <button
+            type="button"
+            title="Delete item"
+            class="h-8 w-8 flex items-center justify-center rounded-full bg-rose-500/10 backdrop-blur-sm border border-rose-300/60 text-rose-600 hover:bg-rose-500/20 active:scale-95 transition"
+            onclick="event.stopPropagation(); deleteItem('${item.name}')">  
+            🗑️
+          </button>
+        </div>
+      </div>
     `;
 
     container.appendChild(card);
@@ -1434,7 +1497,10 @@ function deleteItem(name) {
     method: 'DELETE'
   })
     .then(res => res.json())
-    .then(() => fetchInventory());
+    .then(() => {
+      fetchInventory();        // already there
+      fetchTotalInventory();   // NEW: refresh KPI
+    });
 }
 
 
@@ -1443,25 +1509,40 @@ function deleteItem(name) {
 
 
 
-    async function adjustItemQuantity(name, branch, delta) {
-      try {
-        const res = await fetch(`${API_BASE}/api/inventory/${encodeURIComponent(name)}/adjust`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ branch, delta })
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          console.error("Adjust error", data);
-          alert(data.error || "Could not update quantity");
-          return;
-        }
-        fetchInventory();
-      } catch (err) {
-        console.error("Adjust error", err);
-        alert("Network error while updating quantity");
-      }
+
+ async function adjustItemQuantity(name, branch, delta) {
+  try {
+    console.log('Adjust start', { name, branch, delta });
+
+    const res = await fetch(`${API_BASE}/api/inventory/${encodeURIComponent(name)}/adjust`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ branch, delta })
+    });
+    const data = await res.json();
+    console.log('Adjust response', res.status, data);
+
+    if (!res.ok) {
+      console.error("Adjust error", data);
+      alert(data.error || "Could not update quantity");
+      return;
     }
+
+    console.log('Adjust OK, refreshing UI');
+    fetchInventory();
+
+    console.log('Calling fetchTotalInventory from adjust');
+    fetchTotalInventory();      // must exist
+
+    console.log('Calling fetchLowStock from adjust');
+    fetchLowStock();            // optional
+  } catch (err) {
+    console.error("Adjust error", err);
+    alert("Network error while updating quantity");
+  }
+}
+
+
 
     // Edit Stock modal logic
     let editContext = { name: null, branch: null, current: 0 };
@@ -1522,13 +1603,35 @@ function deleteItem(name) {
     }
 
     // Branches
-    function fetchBranches(callback) {
-      fetch(BRANCHES_API_URL)
-        .then(res => res.json())
-        .then(data => {
-          if (callback) callback(data);
-        });
-    }
+function fetchBranches(callback) {
+  fetch(`${API_BASE}/api/branches`)
+    .then(res => res.json())
+    .then(data => {
+      if (typeof callback === 'function') callback(data);
+    })
+    .catch(err => console.error('fetchBranches error', err));
+}
+
+function updateBatchBranchSelect(branches) {
+  const sel = document.getElementById('batch_branch');
+  if (!sel) return;
+
+  sel.innerHTML = '';
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = 'Select branch';
+  sel.appendChild(placeholder);
+
+  branches.forEach(branch => {
+    const opt = document.createElement('option');
+    opt.value = branch.name;
+    opt.textContent = branch.name;
+    sel.appendChild(opt);
+  });
+}
+
+
 
     function renderBranchesTable(branches) {
       const tbody = document.getElementById('branchesTableBody');
@@ -1598,17 +1701,27 @@ function fetchLowStock() {
 }
 
 function fetchTotalInventory() {
+  console.log('fetchTotalInventory called');
   fetch(`${API_BASE}/api/total-inventory`)
     .then(res => res.json())
     .then(data => {
+      console.log('Total inventory data', data);
       const el = document.getElementById('total-inventory');
-      if (el) {
-        const v = data.value ?? 0;
-        // format as peso; adjust as you like
-        el.textContent = `₱${v.toFixed(2)}`;
-      }
+      if (!el) return;
+
+      const value = data.value || 0;
+      el.textContent = `₱${value.toLocaleString('en-PH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
+    })
+    .catch(err => {
+      console.error('Error fetching total inventory', err);
     });
 }
+
+
+
 
 
 function fetchBranchesCount() {
@@ -2168,6 +2281,41 @@ function closeAllDropdowns() {
 
 function openPurchaseRequestOverlay() {
   alert('New purchase request overlay coming soon.');
+}
+
+// Batch successfully added!
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.remove('hidden');
+  setTimeout(() => toast.classList.add('hidden'), 2500);
+}
+
+function openItemDetails(item) {
+  const o = document.getElementById('itemDetailsOverlay');
+  if (!o) return;
+
+  document.getElementById('detail_name').textContent = item.name || '';
+  document.getElementById('detail_branch').textContent = item.branch || '';
+  document.getElementById('detail_quantity').textContent = item.quantity ?? 0;
+  document.getElementById('detail_reorder').textContent = item.reorder_level ?? 0;
+  document.getElementById('detail_price').textContent = item.price ?? 0;
+  document.getElementById('detail_sku').textContent = item.sku || '';
+  document.getElementById('detail_batch').textContent = item.batch_number || '';
+  document.getElementById('detail_lot').textContent = item.lot_number || '';
+  document.getElementById('detail_mfg').textContent = item.mfg_date || '';
+  document.getElementById('detail_exp').textContent = item.exp_date || '';
+  document.getElementById('detail_supplier_batch').textContent = item.supplier_batch || '';
+  document.getElementById('detail_qr').textContent = item.qr_code_id || '';
+
+  o.classList.remove('hidden');
+}
+
+function closeItemDetails() {
+  const o = document.getElementById('itemDetailsOverlay');
+  if (o) o.classList.add('hidden');
 }
 
 

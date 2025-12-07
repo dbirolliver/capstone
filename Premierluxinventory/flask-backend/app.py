@@ -35,6 +35,8 @@ inventory_collection = db["inventory"]
 branches_collection = db["branches"]
 batches_collection = db["batches"]
 consumption_collection = db["consumption"]
+suppliers_collection = db["suppliers"]
+
 
 # ---------- Root ----------
 
@@ -400,6 +402,29 @@ def expiry_within_days(expiry_value, days):
             return False
 
     return expiry_dt <= datetime.utcnow() + timedelta(days=days)
+
+
+
+suppliers_collection = db["suppliers"]
+
+@app.route("/api/suppliers", methods=["GET"])
+def get_suppliers():
+    suppliers = list(suppliers_collection.find({}, {"_id": 0}))
+    return jsonify(suppliers), 200
+
+@app.route("/api/suppliers", methods=["POST"])
+def add_supplier():
+    data = request.json or {}
+    if not data.get("name"):
+        return jsonify({"error": "Supplier name is required"}), 400
+
+    doc = {
+        "name": data["name"],
+        "contact": data.get("contact", ""),
+        "lead_time_days": data.get("lead_time_days", 0),
+    }
+    suppliers_collection.insert_one(doc)  # auto-creates collection if missing [web:100][web:111]
+    return jsonify({"message": "Supplier added"}), 201
 
 
 

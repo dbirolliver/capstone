@@ -1033,6 +1033,7 @@
       if (page === 'dashboard') {
         fetchLowStock();
         fetchTotalInventory();
+        fetchTotalItems();
         fetchBranchesCount();
         initDashboardAnalytics();
         fetchAlertsForBell();
@@ -1498,46 +1499,6 @@
       });
     }
 
-    async function addBranchHandler() {
-      const nameInput = document.getElementById('branchName');
-      const addressInput = document.getElementById('branchAddress');
-      const managerInput = document.getElementById('branchManager');
-
-      const name = nameInput.value.trim();
-      const address = addressInput.value.trim();
-      const manager = managerInput.value.trim();
-
-      if (!name) {
-        alert('Branch name is required');
-        return;
-      }
-
-      try {
-        const res = await fetch(BRANCHES_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, address, manager })
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error('Add branch failed', text);
-          alert('Failed to add branch');
-          return;
-        }
-
-        nameInput.value = '';
-        addressInput.value = '';
-        managerInput.value = '';
-
-        fetchBranches(renderBranchesTable);
-        fetchBranches(updateBranchSelect);
-        fetchBranchesCount();
-      } catch (err) {
-        console.error('Error adding branch', err);
-        alert('Error adding branch');
-      }
-    }
 
     async function fetchBranches() {
       try {
@@ -1590,7 +1551,7 @@
         document.getElementById('branchAddress').value = '';
         document.getElementById('branchManager').value = '';
         await fetchBranches();
-        await fetchBranchesCount?.(); // if you already have this for the KPI card
+        await fetchBranchesCount(); // if you already have this for the KPI card
       } catch (err) {
         console.error('Error adding branch', err);
         alert('Network error adding branch');
@@ -1637,6 +1598,19 @@
     }
 
 
+    function fetchTotalItems() {
+      fetch(`${API_BASE}/api/inventory`)
+        .then(res => res.json())
+        .then(items => {
+          const el = document.getElementById('total-items');
+          if (!el) return;
+          const total = Array.isArray(items) ? items.length : 0;
+          el.textContent = total.toString();
+        })
+        .catch(err => {
+          console.error('Error fetching total items', err);
+        });
+    }
 
 
 
@@ -1645,9 +1619,12 @@
         .then(res => res.json())
         .then(data => {
           const el = document.getElementById('branches-count');
-          if (el) el.textContent = data.count;
-        });
+          if (el) el.textContent = data.count ?? 0;
+        })
+        .catch(err => console.error('Error fetching branches count', err));
     }
+
+
 
 
     // AI helpers
@@ -1962,6 +1939,23 @@
           console.error('fetchAnalyticsData error', err);
         }
       }
+
+      //total items//
+      async function fetchTotalItems() {
+        try {
+          const res = await fetch(INVENTORY_API_URL);
+          const items = await res.json();
+          const total = Array.isArray(items) ? items.length : 0;
+
+          const el = document.getElementById('total-items');
+          if (el) {
+            el.innerText = total.toString();
+          }
+        } catch (err) {
+          console.error('Error fetching total items', err);
+        }
+      }
+
 
       // --- Apply analytics to UI ---
       function applyAnalytics(items, branches, ai) {

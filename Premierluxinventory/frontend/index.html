@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Premierlux Inventory System</title>
@@ -13,1092 +14,945 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
-<body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen">
-<div class="min-h-screen flex flex-col">
 
-<!-- Bubbly top navbar -->
-<header class="px-6 pt-4 pb-2 flex justify-center relative z-20">
-  <div class="w-full max-w-6xl flex items-center justify-between gap-4
+<body class="bg-gradient-to-br from-blue-100 to-blue-200 min-h-screen">
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Bubbly top navbar -->
+    <header class="px-6 pt-4 pb-2 flex justify-center relative z-20">
+      <div class="w-full max-w-6xl flex items-center justify-between gap-4
               rounded-full bg-slate-900 text-slate-100 px-5 py-2 shadow-lg">
 
-    <!-- Left: logo + name -->
-    <div class="flex items-center gap-2">
-      <div class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center">
-        <span class="text-lg font-bold text-emerald-400">P</span>
-      </div>
-      <span class="text-sm font-semibold tracking-tight">Premierlux Inventory</span>
-    </div>
+        <!-- Left: logo + name -->
+        <div class="flex items-center gap-2">
+          <div class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center">
+            <span class="text-lg font-bold text-emerald-400">P</span>
+          </div>
+          <span class="text-sm font-semibold tracking-tight">Premierlux Inventory</span>
+        </div>
 
-    <!-- Center: nav links -->
-    <nav class="flex items-center gap-6 text-xs">
-      <button type="button" onclick="showPage('dashboard'); closeAllDropdowns();"
-       class="hover:text-white">
-        Dashboard
-      </button>
+        <!-- Center: nav links -->
+        <nav class="flex items-center gap-6 text-xs">
+          <button type="button" onclick="showPage('dashboard'); closeAllDropdowns();" class="hover:text-white">
+            Dashboard
+          </button>
 
-      <!-- Inventory dropdown (click) -->
-      <div class="relative" data-menu-root>
-        <button
-          type="button"
-          class="hover:text-white flex items-center gap-1 text-xs"
-          onclick="toggleMenu('inventoryMenu')">
-          Inventory
-          <span>▾</span>
-        </button>
+          <!-- Inventory dropdown (click) -->
+          <div class="relative" data-menu-root>
+            <button type="button" class="hover:text-white flex items-center gap-1 text-xs"
+              onclick="toggleMenu('inventoryMenu')">
+              Inventory
+              <span>▾</span>
+            </button>
 
-<div
-  id="inventoryMenu"
-  class="nav-dropdown absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
+            <div id="inventoryMenu" class="nav-dropdown absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
          opacity-0 invisible transition">
-          <div class="p-3 space-y-1 text-xs">
-            <button type="button"
-                    onclick="showPage('inventory'); closeAllDropdowns();"
-                    class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-              <span>Inventory dashboard</span><span>→</span>
-            </button>
-            
-            <button type="button"
-                    onclick="showPage('qr'); closeAllDropdowns();"
-                    class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-              <span>QR tracking</span><span>→</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
- <!-- Procurement dropdown (click) -->
-<div class="relative" data-menu-root>
-  <button
-    type="button"
-    class="hover:text-white flex items-center gap-1 text-xs"
-    onclick="toggleMenu('procurementMenu')">
-    Procurement
-    <span>▾</span>
-  </button>
-
-  <div
-    id="procurementMenu"
-    class="nav-dropdown absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
-           opacity-0 invisible transition">
-    <div class="p-3 space-y-1 text-xs">
-      <!-- Suppliers page (current Order page) -->
-      <button type="button"
-              onclick="showPage('suppliers'); closeAllDropdowns();"
-              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-        <span>Suppliers</span><span>→</span>
-      </button>
-
-      <!-- Orders / purchase requests -->
-      <button type="button"
-              onclick="showPage('orders'); closeAllDropdowns();"
-              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-        <span>Orders</span><span>→</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Admin panel dropdown (click) -->
-<div class="relative" data-menu-root>
-  <button
-    type="button"
-    class="hover:text-white flex items-center gap-1 text-xs"
-    onclick="toggleMenu('adminMenu')">
-    Admin panel
-    <span>▾</span>
-  </button>
-
-  <div
-    id="adminMenu"
-    class="nav-dropdown absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
-           opacity-0 invisible transition">
-    <div class="p-3 space-y-1 text-xs">
-      <button type="button"
-              onclick="showPage('compliance'); closeAllDropdowns();"
-              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-        <span>Compliance list</span><span>→</span>
-      </button>
-
-
-      <!-- Roles & access now includes user accounts -->
-      <button type="button"
-              onclick="showPage('admin-roles'); closeAllDropdowns();"
-              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-        <span>Roles & access</span><span>→</span>
-      </button>
-
-      <button type="button"
-              onclick="showPage('admin-logs'); closeAllDropdowns();"
-              class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
-        <span>Activity logs</span><span>→</span>
-      </button>
-
-      <!-- Branches (keep as before) -->
-      <button type="button"
-              onclick="openBranchesFromAdmin(); closeAllDropdowns();"
-              class="flex items-center justify-between w-full px-3 py-2 text-xs rounded-lg hover:bg-slate-800">
-        <span>Branches</span><span>→</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Notification bell: Smart alerts & risks -->
-<div class="relative" data-menu-root>
-  <button
-    type="button"
-    class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-slate-700 transition text-xs relative"
-    onclick="toggleMenu('alertsMenu')">
-    <svg xmlns="http://www.w3.org/2000/svg"
-         class="h-4 w-4"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="1.8"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-      <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
-      <path d="M9 17a3 3 0 0 0 6 0" />
-    </svg>
-    <!-- small red badge with count -->
-    <span id="alertsBadge"
-          class="absolute -top-1 -right-1 hidden text-[9px] px-1.5 rounded-full bg-rose-500 text-white">
-      0
-    </span>
-  </button>
-
-  <!-- Dropdown with smart alerts -->
-  <div
-    id="alertsMenu"
-    class="nav-dropdown absolute right-0 mt-2 w-80 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
-           opacity-0 invisible transition">
-    <div class="p-3 space-y-2 text-xs max-h-80 overflow-y-auto" id="alertsDropdownList">
-      <div class="text-[11px] text-slate-400">
-        No alerts yet.
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-    <!-- Right: Sign out (no logic yet) -->
-    <button
-      type="button"
-      class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition">
-      Sign out
-    </button>
-  </div>
-</header>
-
-
-<!-- Admin · Suppliers (NEW) -->
-<section id="admin-suppliers-section" class="hidden">
-  <div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Suppliers (admin)</h1>
-    <p class="text-xs text-slate-500 mb-4">
-      Manage supplier records for Premierlux Dental Clinic.
-    </p>
-
-    <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-      <p class="text-xs text-slate-500">
-        Supplier list placeholder. Later this will show name, contact, lead time, and active status.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section id="orders-section" class="hidden">
-  <div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Orders</h1>
-    <p class="text-xs text-slate-500 mb-4">
-      Track purchase requests and approved orders.
-    </p>
-    <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-      <p class="text-xs text-slate-500">
-        Orders list placeholder. Later this will show status, supplier, and total amount.
-      </p>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-      <!-- Main dashboard area -->
-<main class="flex-1 px-6 pb-8 pt-4 relative z-10">
-  <div class="w-full max-w-5xl mx-auto">
-
-    <!-- KPI + AI sections -->
-    <section id="dashboard-section">
-
-          <!-- Dashboard title -->
-    <div class="mb-4">
-      <h1 class="text-lg font-semibold text-slate-900">Dashboard overview</h1>
-      <p class="text-xs text-slate-500">
-        Inventory health, low stock alerts, and branch status.
-      </p>
-    </div>
-
-    
-
-  <!-- Dribbble-style KPI Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
-      <div class="text-sm font-semibold text-slate-600">Total Inventory Value</div>
-      <div class="text-2xl font-bold text-slate-900" id="total-inventory">₱0.00</div>
-    </div>
-    <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
-      <div class="text-sm font-semibold text-slate-600">Total Items</div>
-      <div class="text-2xl font-bold text-slate-900" id="total-items">0</div>
-    </div>
-    <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg p-6 shadow-lg text-center">
-      <div class="text-sm font-semibold text-slate-600">Low Stock</div>
-      <div class="text-2xl font-bold text-rose-600" id="low-stock-count">0</div>
-    </div>
-    <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
-      <div class="text-sm font-semibold text-slate-600">Branches</div>
-      <div class="text-2xl font-bold text-slate-900" id="branches-count">0</div>
-    </div>
-  </div>
-
-  <!-- Charts: Dribbble 3-Column Layout -->
- <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-  <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
-      <h3 class="text-sm font-semibold text-slate-900 mb-1">Branch Stock Comparison</h3>
-      <p class="text-[11px] text-slate-500 mb-2">Current stock per branch</p>
-      <div class="h-[240px]"><canvas id="chart-branch-stock"></canvas></div>
-    </div>
-
-    <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
-      <h3 class="text-sm font-semibold text-slate-900 mb-1">Top Items by Usage</h3>
-      <p class="text-[11px] text-slate-500 mb-2">Most consumed inventory items</p>
-      <div class="h-[240px]"><canvas id="chart-top-items"></canvas></div>
-    </div>
-
-    <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
-      <h3 class="text-sm font-semibold text-slate-900 mb-1">7-Day Usage Forecast</h3>
-      <p class="text-[11px] text-slate-500 mb-2">AI-based demand prediction</p>
-      <div class="h-[240px]"><canvas id="chart-7day-forecast"></canvas></div>
-    </div>
-  </div>
-
-<!-- Auto replenish + Low Stock + AI in one glassy row -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-  <!-- Auto replenishment (admin summary) -->
-  <div id="replenish-summary-card"
-       class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4 hidden">
-    <div class="flex items-center justify-between mb-2">
-      <h3 class="text-sm font-semibold text-slate-900">Auto replenishment suggestions</h3>
-      <button type="button"
-              class="text-[11px] text-slate-600 hover:text-slate-900 underline"
-              onclick="showPage('orders')">
-        View all in Orders →
-      </button>
-    </div>
-    <p class="text-[11px] text-slate-500 mb-2">
-      Items below reorder level with suggested order quantities.
-    </p>
-    <ul id="replenish-summary-list" class="space-y-1 text-xs text-slate-700">
-      <li class="text-[11px] text-slate-400">Loading suggestions…</li>
-    </ul>
-  </div>
-
-  <!-- Low Stock Alerts -->
-  <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
-    <h3 class="text-sm font-semibold text-slate-900 mb-1">Low Stock Alerts</h3>
-    <p class="text-[11px] text-slate-500 mb-2">Items that require immediate restocking</p>
-    <ul id="low-stock-list" class="space-y-2"></ul>
-  </div>
-
-  <!-- AI Summary & Risks -->
-  <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
-    <h3 class="text-sm font-semibold text-slate-900 mb-1">AI Summary & Risks</h3>
-    <div id="aiSummaryTextUnified"
-     class="text-xs text-slate-700 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-3 min-h-[140px]"></div>
-    <div class="flex justify-between text-[11px] text-slate-500 mt-3">
-      <span id="aiSummaryStatsUnified"></span>
-      <span id="aiSummaryUpdatedUnified"></span>
-    </div>
-  </div>
-</div>
-</div>
-
-
-        <!-- Inventory -->
-<section id="inventory-section" class="hidden">
-  <div class="flex items-center justify-between mb-4">
-    <div>
-      <h2 class="text-xl font-bold text-blue-700">Inventory</h2>
-      <p class="text-xs text-slate-600">
-        Per‑branch stock with quick adjust, batch history, and AI forecast support.
-      </p>
-    </div>
-    <div class="flex flex-wrap items-center gap-3">
-      <div>
-        <label for="branchSelect" class="block text-xs font-semibold text-slate-600 mb-1">Branch</label>
-        <select id="branchSelect"
-                class="border rounded-lg px-3 py-2 text-sm min-w-[160px]"></select>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Search item</label>
-        <div class="relative">
-          <input type="text"
-                 x-model="search"
-                 placeholder="Search by name..."
-                 class="border rounded-lg pl-8 pr-3 py-2 text-sm min-w-[180px] outline-none focus:ring-2 focus:ring-blue-500" />
-          <span class="absolute inset-y-0 left-2 flex items-center text-slate-400 text-xs">🔍</span>
-        </div>
-      </div>
-      <button type="button"
-              onclick="openBatchOverlay()"
-              class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition">
-        Add Batch
-      </button>
-    </div>
-  </div>
-
-          <!-- Inventory cards -->
-          <div id="inventoryCards"
-               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2">
-          </div>
-
- <div id="inventoryEmptyState" class="hidden mt-10 flex flex-col items-center justify-center text-center text-slate-600">
-  <div class="h-12 w-12 rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 flex items-center justify-center shadow-lg mb-3">
-    📦
-  </div>
-  <p class="text-sm font-semibold text-slate-700">No inventory items yet</p>
-  <p class="text-xs text-slate-400 mb-3">Add your first batch to start tracking stock per branch.</p>
-  <button type="button"
-          onclick="openBatchOverlay()"
-          class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition">
-    Add first batch
-  </button>
-</div>
-</section>
-
-<!-- Edit Stock Overlay (restore) -->
-<div id="editStockOverlay"
-     class="fixed inset-0 bg-white40 flex items-center justify-center z-50 hidden">
-  <div class="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl w-full max-w-md p-6">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="text-lg font-semibold text-slate-900">Edit Item Stock</h2>
-      <button type="button"
-              onclick="closeEditStockModal()"
-              class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
-    </div>
-
-    <div class="space-y-3 mb-4">
-      <div class="text-sm text-slate-700">
-        <div class="font-semibold" id="edit_item_name"></div>
-        <div class="text-xs text-slate-400" id="edit_item_branch"></div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <span class="block text-xs text-slate-600 mb-1">Current stock</span>
-          <span id="edit_current_stock" class="font-semibold text-slate-800">0</span>
-        </div>
-        <div>
-          <span class="block text-xs text-slate-600 mb-1">Action</span>
-          <select id="edit_action"
-                  class="w-full border rounded-lg px-2 py-1.5 text-sm">
-            <option value="out">Stock out</option>
-            <option value="in">Stock in</option>
-            <option value="set">Set exact value</option>
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Quantity</label>
-        <input id="edit_quantity" type="number" min="0" value="0"
-               class="w-full border rounded-lg px-3 py-2 text-sm">
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Note (optional)</label>
-        <input id="edit_note" type="text"
-               class="w-full border rounded-lg px-3 py-2 text-sm"
-               placeholder="Reason for adjustment">
-      </div>
-    </div>
-
-    <div class="flex justify-between items-center pt-3 border-t border-white/40">
-      <button type="button"
-              onclick="closeEditStockModal()"
-              class="px-4 py-2 rounded-lg border text-sm text-slate-600 hover:bg-white/40">
-        Cancel
-      </button>
-      <button type="button"
-              onclick="submitEditStock()"
-              class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-        Save changes
-      </button>
-    </div>
-  </div>
-</div>
-
-
-        <!-- Branches / Admin Panel -->
-        <section id="branches-section" class="hidden">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">Branches (Admin Panel)</h2>
-          </div>
-          <p class="text-xs text-slate-600 mb-4">
-    Manage Premierlux branches, addresses, and managers. Changes here affect where stock and batches are routed.
-  </p>
-
-          <div class="bg-white p-4 rounded-lg shadow flex flex-col md:flex-row gap-3 items-center mb-4">
-            <input id="branchName" type="text" placeholder="Branch name"
-                   class="w-full md:w-1/3 border rounded px-3 py-2 text-sm" />
-            <input id="branchAddress" type="text" placeholder="Address"
-                   class="w-full md:w-1/3 border rounded px-3 py-2 text-sm" />
-            <input id="branchManager" type="text" placeholder="Manager"
-                   class="w-full md:w-1/3 border rounded px-3 py-2 text-sm" />
-            <button id="addBranchBtn"
-                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded">
-              Add Branch
-            </button>
-          </div>
-
-          <div class="overflow-x-auto bg-white rounded-lg shadow">
-            <table class="min-w-full text-sm" id="branchesTable">
-              <thead>
-                <tr class="bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                  <th class="px-4 py-2">Name</th>
-                  <th class="px-4 py-2">Address</th>
-                  <th class="px-4 py-2">Manager</th>
-                </tr>
-              </thead>
-              <tbody id="branchesTableBody"></tbody>
-            </table>
-          </div>
-        </section>
-
-<!-- Suppliers -->
-<section id="suppliers-section" class="hidden">
-  <div class="mb-4">
-    <h2 class="text-xl font-bold text-blue-700">Suppliers</h2>
-    <p class="text-xs text-slate-500">
-      Monitor supplier prices and manage purchase requests with admin approval.
-    </p>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <!-- Supplier price prediction card -->
-    <div class="lg:col-span-1 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4 flex flex-col">
-      <h3 class="text-sm font-semibold text-slate-900 mb-1">Supplier price prediction</h3>
-      <p class="text-xs text-slate-500 mb-3">
-        See expected price changes for key dental supplies based on recent trends.
-      </p>
-
-      <div class="space-y-2 text-xs text-slate-700">
-        <div class="flex justify-between">
-          <span>Composite resin (per kit)</span>
-          <span class="font-semibold text-emerald-700">+4.2% next 30 days</span>
-        </div>
-        <div class="flex justify-between">
-          <span>Dental gloves (per box)</span>
-          <span class="font-semibold text-amber-700">+2.1% next 30 days</span>
-        </div>
-        <div class="flex justify-between">
-          <span>Anesthetic carpules (per box)</span>
-          <span class="font-semibold text-red-600">+6.8% next 30 days</span>
-        </div>
-      </div>
-
-      <p class="mt-3 text-[11px] text-slate-400">
-        Future: connect this card to an AI endpoint that forecasts prices per supplier.
-      </p>
-    </div>
-
-    <!-- Purchase requests card -->
-    <div class="lg:col-span-2 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-4 flex flex-col">
-      <div class="flex items-center justify-between mb-3">
-        <div>
-          <h3 class="text-sm font-semibold text-slate-900">E‑purchase requests</h3>
-          <p class="text-xs text-slate-500">
-            Staff submit requests, admins approve before ordering.
-          </p>
-        </div>
-        <button
-          type="button"
-          onclick="openPurchaseRequestOverlay()"
-          class="px-3 py-1.5 rounded-full bg-blue-600 text-white text-xs font-medium hover:bg-blue-700">
-          + New request
-        </button>
-      </div>
-
-      <!-- Requests table placeholder -->
-      <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
-        <div class="grid grid-cols-5 gap-2 px-3 py-2 bg-slate-50 text-slate-500 font-semibold">
-          <span>Date</span>
-          <span>Item</span>
-          <span>Supplier</span>
-          <span>Status</span>
-          <span class="text-right">Action</span>
-        </div>
-        <div id="purchaseRequestsBody" class="divide-y divide-slate-100">
-          <div class="px-3 py-3 text-slate-400 text-[11px]">
-            No purchase requests yet. Use “New request” to create one.
-          </div>
-        </div>
-      </div>
-
-      <p class="mt-3 text-[11px] text-slate-400">
-        Future: load this list from a purchase_requests collection and show Approve / Reject for admins.
-      </p>
-    </div>
-  </div>
-</section>
-
-
-        <!-- Compliance -->
-<section id="compliance-section" class="hidden">
-  <div class="flex items-center justify-between mb-4">
-    <div>
-      <h2 class="text-xl font-bold text-blue-700">Compliance</h2>
-      <p class="text-xs text-slate-600">
-        Track expiry checks, sterilization logs, and stock variance audits.
-      </p>
-    </div>
-    <button
-      type="button"
-      class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition">
-      New compliance record
-    </button>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-    <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-5 py-4">
-      <h3 class="text-sm font-semibold text-slate-900">Expiry checks</h3>
-      <p class="text-[11px] text-slate-600 mt-1">
-        Items nearing expiration across all branches.
-      </p>
-      <p class="mt-3 text-2xl font-bold text-amber-600">0</p>
-    </div>
-    <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-5 py-4">
-      <h3 class="text-sm font-semibold text-slate-900">Sterilization logs</h3>
-      <p class="text-[11px] text-slate-600 mt-1">
-        Recent autoclave / sterilization cycles recorded.
-      </p>
-      <p class="mt-3 text-2xl font-bold text-emerald-600">0</p>
-    </div>
-    <div class="rounded-2xl bg-white/70 backdrop-blur shadow-sm px-5 py-4">
-      <h3 class="text-sm font-semibold text-slate-900">Stock audits</h3>
-      <p class="text-[11px] text-slate-600 mt-1">
-        Variance checks between system and physical count.
-      </p>
-      <p class="mt-3 text-2xl font-bold text-slate-700">0</p>
-    </div>
-  </div>
-
-  <div class="rounded-2xl bg-white/80 backdrop-blur shadow-sm overflow-hidden">
-    <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-semibold text-slate-900">Recent compliance checks</h3>
-        <p class="text-[11px] text-slate-600">
-          Placeholder table; will be filled from Mongo when backend is ready.
-        </p>
-      </div>
-    </div>
-    <div class="overflow-x-auto">
-      <table class="min-w-full text-xs">
-        <thead>
-          <tr class="bg-slate-50 text-left text-[11px] font-semibold text-slate-600 uppercase tracking-wide">
-            <th class="px-4 py-2">Date</th>
-            <th class="px-4 py-2">Type</th>
-            <th class="px-4 py-2">Branch</th>
-            <th class="px-4 py-2">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="border-t">
-            <td class="px-4 py-2 text-slate-400" colspan="4">
-              No compliance records yet. This will list expiry checks, sterilization logs, and audits.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- QR Tracking -->
-<section id="qr-section" class="hidden">
-  <div class="flex items-center justify-between mb-4">
-    <div>
-      <h2 class="text-xl font-bold text-blue-700">QR Tracking</h2>
-      <p class="text-xs text-slate-600">
-        Scan or enter QR codes to jump directly to batches and adjust stock.
-      </p>
-    </div>
-    <button
-      type="button"
-      class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition">
-      Configure QR rules
-    </button>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-    <!-- Scan / input card -->
-    <div class="rounded-2xl bg-white/80 backdrop-blur shadow-sm px-5 py-4 flex flex-col gap-3">
-      <div>
-        <h3 class="text-sm font-semibold text-slate-900">Lookup QR code</h3>
-        <p class="text-[11px] text-slate-600">
-          For now, type or paste the QR code ID. Later this can use the camera.
-        </p>
-      </div>
-      <div class="flex flex-col gap-2">
-        <input
-          id="qrLookupInput"
-          type="text"
-          placeholder="Enter QR code ID (e.g. batch_qr_001)"
-          class="border rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
-        <button
-          type="button"
-          class="self-start px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition">
-          Find batch
-        </button>
-      </div>
-      <div
-        id="qrLookupResult"
-        class="mt-2 text-[11px] text-slate-600">
-        No QR search performed yet.
-      </div>
-    </div>
-
-    <!-- Recent QR events -->
-    <div class="rounded-2xl bg-white/80 backdrop-blur shadow-sm px-5 py-4">
-      <div class="flex items-center justify-between mb-2">
-        <div>
-          <h3 class="text-sm font-semibold text-slate-900">Recent QR activity</h3>
-          <p class="text-[11px] text-slate-600">
-            When backend is ready, this will list scans (item, action, time, branch).
-          </p>
-        </div>
-      </div>
-      <ul class="mt-2 space-y-2 text-[11px] text-slate-600">
-        <li class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
-          No QR events recorded yet. This is a placeholder for future tracking.
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-
-
-        <!-- Batch Overlay -->
-        <div id="batchOverlay"
-             class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
-          <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6">
-            <div class="flex items-center justify-between mb-4">
-              <div>
-                <h2 class="text-lg font-semibold text-slate-900">Add New Inventory Batch</h2>
-                <p class="text-xs text-slate-600">
-                  Create a new batch entry so FIFO can be tracked per expiration date.
-                </p>
+              <div class="p-3 space-y-1 text-xs">
+                <button type="button" onclick="showPage('inventory'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>Inventory dashboard</span><span>→</span>
+                </button>
+
+                <button type="button" onclick="showPage('qr'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>QR tracking</span><span>→</span>
+                </button>
               </div>
-              <button type="button" onclick="closeBatchOverlay()"
-                      class="text-slate-400 hover:text-slate-600 text-xl">×</button>
             </div>
+          </div>
 
-            <form id="batchForm" class="space-y-6" onsubmit="submitBatchForm(event)">
-              <div>
-                <h3 class="text-sm font-semibold text-slate-800 mb-3">Item Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Item Name *</label>
-                    <input id="batch_item_name" type="text"
-                           class="w-full border rounded-lg px-3 py-2 text-sm"
-                           placeholder="Enter item name" required>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">SKU</label>
-                    <input id="batch_sku" type="text"
-                           class="w-full border rounded-lg px-3 py-2 text-sm"
-                           placeholder="Enter SKU">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Branch *</label>
-                    <select id="batch_branch"
-                            class="w-full border rounded-lg px-3 py-2 text-sm"
-                            required></select>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Usage</label>
-                    <input id="batch_monthly_usage" type="number" min="0" value="0"
-                           class="w-full border rounded-lg px-3 py-2 text-sm">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Current Stock *</label>
-                    <input id="batch_current_stock" type="number" min="0" value="0" required
-                           class="w-full border rounded-lg px-3 py-2 text-sm">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Reorder Level *</label>
-                    <input id="batch_reorder_level" type="number" min="0" value="0" required
-                           class="w-full border rounded-lg px-3 py-2 text-sm">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Price (₱)</label>
-                    <input id="batch_price" type="number" min="0" step="0.01" value="0"
-                           class="w-full border rounded-lg px-3 py-2 text-sm">
-                  </div>
-                </div>
-              </div>
+          <!-- Procurement dropdown (click) -->
+          <div class="relative" data-menu-root>
+            <button type="button" class="hover:text-white flex items-center gap-1 text-xs"
+              onclick="toggleMenu('procurementMenu')">
+              Procurement
+              <span>▾</span>
+            </button>
 
-              <div>
-                <h3 class="text-sm font-semibold text-slate-800 mb-3">Batch Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Batch Number</label>
-                    <input id="batch_batch_number" type="text"
-                           class="w-full border rounded-lg px-3 py-2 text-sm"
-                           placeholder="Auto-generated if empty">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Lot Number</label>
-                    <input id="batch_lot_number" type="text"
-                           class="w-full border rounded-lg px-3 py-2 text-sm"
-                           placeholder="Manufacturer lot number">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Manufacturing Date</label>
-                    <input id="batch_mfg_date" type="date"
-                           class="w-full border rounded-lg px-3 py-2 text-sm">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Expiration Date</label>
-                    <input id="batch_exp_date" type="date"
-                           class="w-full border rounded-lg px-3 py-2 text-sm">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Supplier Batch</label>
-                    <input id="batch_supplier_batch" type="text"
-                           class="w-full border rounded-lg px-3 py-2 text-sm"
-                           placeholder="Supplier batch reference">
-                  </div>
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">QR Code ID</label>
-                    <input id="batch_qr_code_id" type="text"
-                           class="w-full border rounded-lg px-3 py-2 text-sm"
-                           placeholder="Auto-generated if empty">
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-end gap-3 pt-4 border-t">
-                <button type="button" onclick="closeBatchOverlay()"
-                        class="px-4 py-2 rounded-lg border text-sm text-slate-600 hover:bg-slate-50">
-                  Cancel
+            <div id="procurementMenu" class="nav-dropdown absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
+           opacity-0 invisible transition">
+              <div class="p-3 space-y-1 text-xs">
+                <!-- Suppliers page (current Order page) -->
+                <button type="button" onclick="showPage('suppliers'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>Suppliers</span><span>→</span>
                 </button>
-                <button type="submit"
-                        class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                  Add Batch
+
+                <!-- Orders / purchase requests -->
+                <button type="button" onclick="showPage('orders'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>Orders</span><span>→</span>
                 </button>
               </div>
-            </form>
+            </div>
+          </div>
+
+
+
+          <!-- Admin panel dropdown (click) -->
+          <div class="relative" data-menu-root>
+            <button type="button" class="hover:text-white flex items-center gap-1 text-xs"
+              onclick="toggleMenu('adminMenu')">
+              Admin panel
+              <span>▾</span>
+            </button>
+
+            <div id="adminMenu" class="nav-dropdown absolute left-1/2 -translate-x-1/2 mt-2 w-64 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
+           opacity-0 invisible transition">
+              <div class="p-3 space-y-1 text-xs">
+                <button type="button" onclick="showPage('compliance'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>Compliance list</span><span>→</span>
+                </button>
+
+
+                <!-- Roles & access now includes user accounts -->
+                <button type="button" onclick="showPage('admin-roles'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>Roles & access</span><span>→</span>
+                </button>
+
+                <button type="button" onclick="showPage('admin-logs'); closeAllDropdowns();"
+                  class="w-full flex items-center justify-between py-2 px-3 rounded-xl hover:bg-slate-800">
+                  <span>Activity logs</span><span>→</span>
+                </button>
+
+                <!-- Branches (keep as before) -->
+                <button type="button" onclick="openBranchesFromAdmin(); closeAllDropdowns();"
+                  class="flex items-center justify-between w-full px-3 py-2 text-xs rounded-lg hover:bg-slate-800">
+                  <span>Branches</span><span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification bell: Smart alerts & risks -->
+          <div class="relative" data-menu-root>
+            <button type="button"
+              class="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-slate-700 transition text-xs relative"
+              onclick="toggleMenu('alertsMenu')">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" />
+                <path d="M9 17a3 3 0 0 0 6 0" />
+              </svg>
+              <!-- small red badge with count -->
+              <span id="alertsBadge"
+                class="absolute -top-1 -right-1 hidden text-[9px] px-1.5 rounded-full bg-rose-500 text-white">
+                0
+              </span>
+            </button>
+
+            <!-- Dropdown with smart alerts -->
+            <div id="alertsMenu" class="nav-dropdown absolute right-0 mt-2 w-80 bg-slate-900 text-slate-100 rounded-2xl shadow-xl
+           opacity-0 invisible transition">
+              <div class="p-3 space-y-2 text-xs max-h-80 overflow-y-auto" id="alertsDropdownList">
+                <div class="text-[11px] text-slate-400">
+                  No alerts yet.
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- Right: Sign out (no logic yet) -->
+          <button type="button" class="text-xs px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 transition">
+            Sign out
+          </button>
+      </div>
+    </header>
+
+
+    <!-- Suppliers (glassy admin section) -->
+    <section id="suppliers-section" class="hidden">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900">Suppliers</h2>
+            <p class="text-xs text-slate-500">
+              Manage supplier contacts and lead times for purchase requests.
+            </p>
           </div>
         </div>
 
-<div id="itemDetailsOverlay"
-     class="fixed inset-0 bg-white/40 flex items-center justify-center z-50 hidden">
-  <div class="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl w-full max-w-md p-5 text-sm text-slate-800">
-    <div class="flex items-center justify-between mb-3">
-      <h2 class="text-base font-semibold text-slate-900">Item details</h2>
-      <button type="button"
-              onclick="closeItemDetails()"
-              class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
-    </div>
-
-    <div class="space-y-2">
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Name</span>
-        <span id="detail_name" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Branch</span>
-        <span id="detail_branch" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Quantity</span>
-        <span id="detail_quantity" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Reorder level</span>
-        <span id="detail_reorder" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Price (₱)</span>
-        <span id="detail_price" class="flex-1 text-right"></span>
-      </div>
-      <hr class="border-white/40 my-1">
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">SKU</span>
-        <span id="detail_sku" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Batch no.</span>
-        <span id="detail_batch" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Lot no.</span>
-        <span id="detail_lot" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Mfg date</span>
-        <span id="detail_mfg" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Exp date</span>
-        <span id="detail_exp" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">Supplier batch</span>
-        <span id="detail_supplier_batch" class="flex-1 text-right"></span>
-      </div>
-      <div class="flex justify-between gap-3">
-        <span class="font-semibold text-slate-600 w-28">QR code ID</span>
-        <span id="detail_qr" class="flex-1 text-right break-all"></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-        <!-- Staff -->
-        <section id="staff-section" class="hidden">
-          <h2 class="text-xl font-bold text-blue-700 mb-4">Staff</h2>
-          <p>Manage staff roles and permissions.</p>
-        </section>
-
-        <!-- Admin · Compliance list -->
-<section id="admin-compliance-section" class="hidden">
-  <div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Compliance list</h1>
-
-    <!-- Filters / summary -->
-    <div class="grid gap-4 md:grid-cols-3 mb-6">
-      <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
-        <p class="text-xs text-slate-500">Active policies</p>
-        <p class="text-2xl font-bold text-slate-900">0</p>
-      </div>
-      <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
-        <p class="text-xs text-slate-500">Expiring soon</p>
-        <p class="text-2xl font-bold text-slate-900">0</p>
-      </div>
-      <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
-        <p class="text-xs text-slate-500">Last audit</p>
-        <p class="text-sm font-medium text-slate-900">Not configured</p>
-      </div>
-    </div>
-
-    <!-- Table placeholder -->
-    <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-semibold text-slate-800">Compliance rules</h2>
-        <button class="text-xs px-3 py-1 rounded-full bg-slate-900 text-slate-100 hover:bg-slate-800">
-          New rule
-        </button>
-      </div>
-      <p class="text-xs text-slate-500">
-        No compliance rules yet. Configure expiry checks, storage rules, and audit requirements here.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- Admin · Roles & access -->
-<section id="admin-roles-section" class="hidden">
-  <div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Roles & access</h1>
-
-    <div class="grid md:grid-cols-2 gap-6">
-      <!-- Roles overview -->
-      <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-sm font-semibold text-slate-800">Defined roles</h2>
-          <button class="text-xs px-3 py-1 rounded-full bg-slate-900 text-slate-100 hover:bg-slate-800">
-            Add role
+        <!-- Glassy input card -->
+        <div class="rounded-2xl bg-white/40 backdrop-blur-xl shadow-lg border border-white/40
+                flex flex-col md:flex-row gap-3 items-center px-4 py-3 mb-4">
+          <input id="supplierName" type="text" placeholder="Supplier name" class="w-full md:w-1/3 rounded-full border border-slate-200/60 bg-white/40
+                    px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-transparent" />
+          <input id="supplierContact" type="text" placeholder="Contact / phone" class="w-full md:w-1/3 rounded-full border border-slate-200/60 bg-white/40
+                    px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-transparent" />
+          <input id="supplierLeadTime" type="number" min="0" placeholder="Lead time (days)" class="w-full md:w-1/3 rounded-full border border-slate-200/60 bg-white/40
+                    px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-transparent" />
+          <button id="addSupplierBtn" class="shrink-0 rounded-full bg-slate-900 text-white text-xs font-medium
+                     px-4 py-2 shadow-md hover:bg-slate-800 active:scale-[0.98]
+                     transition-transform">
+            Add supplier
           </button>
         </div>
-        <ul class="text-xs text-slate-600 space-y-1">
-          <li><span class="font-semibold text-slate-800">Admin:</span> full access to all modules.</li>
-          <li><span class="font-semibold text-slate-800">Manager:</span> approve purchases, manage inventory.</li>
-          <li><span class="font-semibold text-slate-800">Staff:</span> view and update stock only.</li>
-          <li><span class="font-semibold text-slate-800">Viewer:</span> read‑only dashboards.</li>
-        </ul>
-      </div>
 
-      <!-- Permissions matrix placeholder -->
-      <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-        <h2 class="text-sm font-semibold text-slate-800 mb-3">Permissions matrix</h2>
-        <p class="text-xs text-slate-500 mb-2">
-          Later this will show which actions each role can perform (view, create, approve, delete).
+        <!-- Glassy list card -->
+        <div class="rounded-2xl bg-white/40 backdrop-blur-xl shadow-lg border border-white/40 overflow-hidden">
+          <div class="px-4 py-3 border-b border-white/40 flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">Registered suppliers</h3>
+              <p class="text-[11px] text-slate-500">
+                Used when creating purchase requests and orders.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-3">
+            <ul id="suppliersList" class="space-y-2 text-xs text-slate-800">
+              <!-- JS will render suppliers here -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="orders-section" class="hidden">
+      <div class="max-w-6xl mx-auto py-8 px-4">
+        <h1 class="text-2xl font-semibold text-slate-900 mb-4">Orders</h1>
+        <p class="text-xs text-slate-500 mb-4">
+          Track purchase requests and approved orders.
         </p>
-        <div class="border border-dashed border-slate-300 rounded-xl p-4 text-center text-xs text-slate-400">
-          RBAC table placeholder
+        <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
+          <p class="text-xs text-slate-500">
+            Orders list placeholder. Later this will show status, supplier, and total amount.
+          </p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Admin · User accounts -->
-<section id="admin-accounts-section" class="hidden">
-  <div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-2xl font-semibold text-slate-900 mb-4">User accounts</h1>
 
-    <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow mb-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm font-semibold text-slate-800">Accounts</p>
-          <p class="text-xs text-slate-500">Create accounts and assign roles.</p>
+
+
+
+    <!-- Main dashboard area -->
+    <main class="flex-1 px-6 pb-8 pt-4 relative z-10">
+      <div class="w-full max-w-5xl mx-auto">
+
+        <!-- KPI + AI sections -->
+        <section id="dashboard-section">
+
+          <!-- Dashboard title -->
+          <div class="mb-4">
+            <h1 class="text-lg font-semibold text-slate-900">Dashboard overview</h1>
+            <p class="text-xs text-slate-500">
+              Inventory health, low stock alerts, and branch status.
+            </p>
+          </div>
+
+
+
+          <!-- Dribbble-style KPI Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
+              <div class="text-sm font-semibold text-slate-600">Total Inventory Value</div>
+              <div class="text-2xl font-bold text-slate-900" id="total-inventory">₱0.00</div>
+            </div>
+            <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
+              <div class="text-sm font-semibold text-slate-600">Total Items</div>
+              <div class="text-2xl font-bold text-slate-900" id="total-items">0</div>
+            </div>
+            <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg p-6 shadow-lg text-center">
+              <div class="text-sm font-semibold text-slate-600">Low Stock</div>
+              <div class="text-2xl font-bold text-rose-600" id="low-stock-count">0</div>
+            </div>
+            <div class="rounded-xl bg-white/40 backdrop-blur-lg p-6 shadow-lg text-center">
+              <div class="text-sm font-semibold text-slate-600">Branches</div>
+              <div class="text-2xl font-bold text-slate-900" id="branches-count">0</div>
+            </div>
+          </div>
+
+          <!-- Charts: Dribbble 3-Column Layout -->
+          <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+            <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
+              <h3 class="text-sm font-semibold text-slate-900 mb-1">Branch Stock Comparison</h3>
+              <p class="text-[11px] text-slate-500 mb-2">Current stock per branch</p>
+              <div class="h-[240px]"><canvas id="chart-branch-stock"></canvas></div>
+            </div>
+
+            <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
+              <h3 class="text-sm font-semibold text-slate-900 mb-1">Top Items by Usage</h3>
+              <p class="text-[11px] text-slate-500 mb-2">Most consumed inventory items</p>
+              <div class="h-[240px]"><canvas id="chart-top-items"></canvas></div>
+            </div>
+
+            <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
+              <h3 class="text-sm font-semibold text-slate-900 mb-1">7-Day Usage Forecast</h3>
+              <p class="text-[11px] text-slate-500 mb-2">AI-based demand prediction</p>
+              <div class="h-[240px]"><canvas id="chart-7day-forecast"></canvas></div>
+            </div>
+          </div>
+
+          <!-- Auto replenish + Low Stock + AI in one glassy row -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            <!-- Auto replenishment (admin summary) -->
+            <div id="replenish-summary-card"
+              class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-sm font-semibold text-slate-900">Auto replenishment suggestions</h3>
+                <button type="button" class="text-[11px] text-slate-600 hover:text-slate-900 underline"
+                  onclick="showPage('orders')">
+                  View all in Orders →
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 mb-2">
+                Items below reorder level with suggested order quantities.
+              </p>
+              <ul id="replenish-summary-list" class="space-y-1 text-xs text-slate-700">
+                <li class="text-[11px] text-slate-400">Loading suggestions…</li>
+              </ul>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
+              <h3 class="text-sm font-semibold text-slate-900 mb-1">Low Stock Alerts</h3>
+              <p class="text-[11px] text-slate-500 mb-2">Items that require immediate restocking</p>
+              <ul id="low-stock-list" class="space-y-2"></ul>
+            </div>
+
+            <!-- AI Summary & Risks -->
+            <div class="rounded-2xl bg-white/30 backdrop-blur-xl shadow-lg border border-white/30 p-4">
+              <h3 class="text-sm font-semibold text-slate-900 mb-1">AI Summary & Risks</h3>
+              <div id="aiSummaryTextUnified"
+                class="text-xs text-slate-700 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 p-3 min-h-[140px]">
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-500 mt-3">
+                <span id="aiSummaryStatsUnified"></span>
+                <span id="aiSummaryUpdatedUnified"></span>
+              </div>
+            </div>
+          </div>
+      </div>
+
+
+      <!-- Inventory -->
+      <section id="inventory-section" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-blue-700">Inventory</h2>
+            <p class="text-xs text-slate-600">
+              Per‑branch stock with quick adjust, batch history, and AI forecast support.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <label for="branchSelect" class="block text-xs font-semibold text-slate-600 mb-1">Branch</label>
+              <select id="branchSelect" class="border rounded-lg px-3 py-2 text-sm min-w-[160px]"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Search item</label>
+              <div class="relative">
+                <input type="text" x-model="search" placeholder="Search by name..."
+                  class="border rounded-lg pl-8 pr-3 py-2 text-sm min-w-[180px] outline-none focus:ring-2 focus:ring-blue-500" />
+                <span class="absolute inset-y-0 left-2 flex items-center text-slate-400 text-xs">🔍</span>
+              </div>
+            </div>
+            <button type="button" onclick="openBatchOverlay()"
+              class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition">
+              Add Batch
+            </button>
+          </div>
         </div>
-        <button class="text-xs px-3 py-1 rounded-full bg-emerald-500 text-white hover:bg-emerald-600">
-          New account
-        </button>
-      </div>
-    </div>
 
-    <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-      <table class="w-full text-xs text-left text-slate-600">
-        <thead class="text-slate-500 border-b border-slate-200">
-          <tr>
-            <th class="py-2">User</th>
-            <th class="py-2">Email</th>
-            <th class="py-2">Role</th>
-            <th class="py-2 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="py-2">–</td>
-            <td class="py-2">No users yet</td>
-            <td class="py-2">–</td>
-            <td class="py-2 text-right">
-              <span class="text-[11px] text-slate-400">Connect to backend later</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+        <!-- Inventory cards -->
+        <div id="inventoryCards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-2">
+        </div>
 
-<!-- Admin · Activity logs -->
-<section id="admin-logs-section" class="hidden">
-  <div class="max-w-6xl mx-auto py-8 px-4">
-    <h1 class="text-2xl font-semibold text-slate-900 mb-4">Activity logs</h1>
+        <div id="inventoryEmptyState"
+          class="hidden mt-10 flex flex-col items-center justify-center text-center text-slate-600">
+          <div
+            class="h-12 w-12 rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 flex items-center justify-center shadow-lg mb-3">
+            📦
+          </div>
+          <p class="text-sm font-semibold text-slate-700">No inventory items yet</p>
+          <p class="text-xs text-slate-400 mb-3">Add your first batch to start tracking stock per branch.</p>
+          <button type="button" onclick="openBatchOverlay()"
+            class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition">
+            Add first batch
+          </button>
+        </div>
+      </section>
 
-    <div class="grid gap-4 md:grid-cols-3 mb-6">
-      <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
-        <p class="text-xs text-slate-500">Events today</p>
-        <p class="text-2xl font-bold text-slate-900">0</p>
-      </div>
-      <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
-        <p class="text-xs text-slate-500">Admin actions</p>
-        <p class="text-2xl font-bold text-slate-900">0</p>
-      </div>
-      <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
-        <p class="text-xs text-slate-500">Last login</p>
-        <p class="text-sm font-medium text-slate-900">Not recorded</p>
-      </div>
-    </div>
+      <!-- Edit Stock Overlay (restore) -->
+      <div id="editStockOverlay" class="fixed inset-0 bg-white40 flex items-center justify-center z-50 hidden">
+        <div class="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl w-full max-w-md p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-slate-900">Edit Item Stock</h2>
+            <button type="button" onclick="closeEditStockModal()"
+              class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+          </div>
 
-    <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-semibold text-slate-800">Audit trail</h2>
-        <div class="flex gap-2">
-          <input type="text" placeholder="Filter by user or action"
-                 class="text-xs px-3 py-1 rounded-full border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-300 bg-white/80" />
+          <div class="space-y-3 mb-4">
+            <div class="text-sm text-slate-700">
+              <div class="font-semibold" id="edit_item_name"></div>
+              <div class="text-xs text-slate-400" id="edit_item_branch"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span class="block text-xs text-slate-600 mb-1">Current stock</span>
+                <span id="edit_current_stock" class="font-semibold text-slate-800">0</span>
+              </div>
+              <div>
+                <span class="block text-xs text-slate-600 mb-1">Action</span>
+                <select id="edit_action" class="w-full border rounded-lg px-2 py-1.5 text-sm">
+                  <option value="out">Stock out</option>
+                  <option value="in">Stock in</option>
+                  <option value="set">Set exact value</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Quantity</label>
+              <input id="edit_quantity" type="number" min="0" value="0"
+                class="w-full border rounded-lg px-3 py-2 text-sm">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Note (optional)</label>
+              <input id="edit_note" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                placeholder="Reason for adjustment">
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center pt-3 border-t border-white/40">
+            <button type="button" onclick="closeEditStockModal()"
+              class="px-4 py-2 rounded-lg border text-sm text-slate-600 hover:bg-white/40">
+              Cancel
+            </button>
+            <button type="button" onclick="submitEditStock()"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+              Save changes
+            </button>
+          </div>
         </div>
       </div>
-      <p class="text-xs text-slate-500 mb-2">
-        Behavioral logging will record approvals, role changes, and inventory adjustments here.
-      </p>
-      <div class="border border-dashed border-slate-300 rounded-xl p-4 text-center text-xs text-slate-400">
-        No log entries yet.
+
+
+      <!-- Branches / Admin Panel -->
+      <!-- Branches / Admin Panel (Glassy) -->
+      <section id="branches-section" class="hidden">
+        <div class="max-w-6xl mx-auto">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-semibold text-slate-900">Branches (Admin panel)</h2>
+            <span class="text-[11px] text-slate-500">
+              Manage locations where stock and batches are routed.
+            </span>
+          </div>
+
+          <!-- Glassy input card -->
+          <div class="rounded-2xl bg-white/40 backdrop-blur-xl shadow-lg border border-white/40
+                flex flex-col md:flex-row gap-3 items-center px-4 py-3 mb-4">
+            <input id="branchName" type="text" placeholder="Branch name" class="w-full md:w-1/3 rounded-full border border-slate-200/60 bg-white/40
+                    px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-transparent" />
+            <input id="branchAddress" type="text" placeholder="Address" class="w-full md:w-1/3 rounded-full border border-slate-200/60 bg-white/40
+                    px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-transparent" />
+            <input id="branchManager" type="text" placeholder="Manager" class="w-full md:w-1/3 rounded-full border border-slate-200/60 bg-white/40
+                    px-3 py-2 text-xs text-slate-800 placeholder:text-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-transparent" />
+            <button id="addBranchBtn" class="shrink-0 rounded-full bg-slate-900 text-white text-xs font-medium
+                     px-4 py-2 shadow-md hover:bg-slate-800 active:scale-[0.98]
+                     transition-transform">
+              Add branch
+            </button>
+          </div>
+
+          <!-- Glassy table card -->
+          <div class="rounded-2xl bg-white/40 backdrop-blur-xl shadow-lg border border-white/40 overflow-hidden">
+            <div class="px-4 py-3 flex items-center justify-between border-b border-white/40">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">Registered branches</h3>
+                <p class="text-[11px] text-slate-500">
+                  Each branch can have its own inventory and alerts.
+                </p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full text-xs" id="branchesTable">
+                <thead>
+                  <tr class="bg-white/30 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Address</th>
+                    <th class="px-4 py-2">Manager</th>
+                  </tr>
+                </thead>
+                <tbody id="branchesTableBody" class="divide-y divide-white/40 text-slate-800">
+                  <!-- rows added by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- QR Tracking -->
+      <section id="qr-section" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-xl font-bold text-blue-700">QR Tracking</h2>
+            <p class="text-xs text-slate-600">
+              Scan or enter QR codes to jump directly to batches and adjust stock.
+            </p>
+          </div>
+          <button type="button"
+            class="px-4 py-2 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition">
+            Configure QR rules
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          <!-- Scan / input card -->
+          <div class="rounded-2xl bg-white/80 backdrop-blur shadow-sm px-5 py-4 flex flex-col gap-3">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900">Lookup QR code</h3>
+              <p class="text-[11px] text-slate-600">
+                For now, type or paste the QR code ID. Later this can use the camera.
+              </p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <input id="qrLookupInput" type="text" placeholder="Enter QR code ID (e.g. batch_qr_001)"
+                class="border rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+              <button type="button"
+                class="self-start px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs font-medium hover:bg-emerald-700 transition">
+                Find batch
+              </button>
+            </div>
+            <div id="qrLookupResult" class="mt-2 text-[11px] text-slate-600">
+              No QR search performed yet.
+            </div>
+          </div>
+
+          <!-- Recent QR events -->
+          <div class="rounded-2xl bg-white/80 backdrop-blur shadow-sm px-5 py-4">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">Recent QR activity</h3>
+                <p class="text-[11px] text-slate-600">
+                  When backend is ready, this will list scans (item, action, time, branch).
+                </p>
+              </div>
+            </div>
+            <ul class="mt-2 space-y-2 text-[11px] text-slate-600">
+              <li class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-100">
+                No QR events recorded yet. This is a placeholder for future tracking.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- Batch Overlay -->
+      <div id="batchOverlay" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-900">Add New Inventory Batch</h2>
+              <p class="text-xs text-slate-600">
+                Create a new batch entry so FIFO can be tracked per expiration date.
+              </p>
+            </div>
+            <button type="button" onclick="closeBatchOverlay()"
+              class="text-slate-400 hover:text-slate-600 text-xl">×</button>
+          </div>
+
+          <form id="batchForm" class="space-y-6" onsubmit="submitBatchForm(event)">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">Item Information</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Item Name *</label>
+                  <input id="batch_item_name" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                    placeholder="Enter item name" required>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">SKU</label>
+                  <input id="batch_sku" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                    placeholder="Enter SKU">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Branch *</label>
+                  <select id="batch_branch" class="w-full border rounded-lg px-3 py-2 text-sm" required></select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Usage</label>
+                  <input id="batch_monthly_usage" type="number" min="0" value="0"
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Current Stock *</label>
+                  <input id="batch_current_stock" type="number" min="0" value="0" required
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Reorder Level *</label>
+                  <input id="batch_reorder_level" type="number" min="0" value="0" required
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Price (₱)</label>
+                  <input id="batch_price" type="number" min="0" step="0.01" value="0"
+                    class="w-full border rounded-lg px-3 py-2 text-sm">
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-semibold text-slate-800 mb-3">Batch Information</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Batch Number</label>
+                  <input id="batch_batch_number" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                    placeholder="Auto-generated if empty">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Lot Number</label>
+                  <input id="batch_lot_number" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                    placeholder="Manufacturer lot number">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Manufacturing Date</label>
+                  <input id="batch_mfg_date" type="date" class="w-full border rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Expiration Date</label>
+                  <input id="batch_exp_date" type="date" class="w-full border rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Supplier Batch</label>
+                  <input id="batch_supplier_batch" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                    placeholder="Supplier batch reference">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">QR Code ID</label>
+                  <input id="batch_qr_code_id" type="text" class="w-full border rounded-lg px-3 py-2 text-sm"
+                    placeholder="Auto-generated if empty">
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t">
+              <button type="button" onclick="closeBatchOverlay()"
+                class="px-4 py-2 rounded-lg border text-sm text-slate-600 hover:bg-slate-50">
+                Cancel
+              </button>
+              <button type="submit"
+                class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                Add Batch
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+
+      <div id="itemDetailsOverlay" class="fixed inset-0 bg-white/40 flex items-center justify-center z-50 hidden">
+        <div
+          class="rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-xl w-full max-w-md p-5 text-sm text-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-base font-semibold text-slate-900">Item details</h2>
+            <button type="button" onclick="closeItemDetails()"
+              class="text-slate-400 hover:text-slate-600 text-xl leading-none">×</button>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Name</span>
+              <span id="detail_name" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Branch</span>
+              <span id="detail_branch" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Quantity</span>
+              <span id="detail_quantity" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Reorder level</span>
+              <span id="detail_reorder" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Price (₱)</span>
+              <span id="detail_price" class="flex-1 text-right"></span>
+            </div>
+            <hr class="border-white/40 my-1">
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">SKU</span>
+              <span id="detail_sku" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Batch no.</span>
+              <span id="detail_batch" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Lot no.</span>
+              <span id="detail_lot" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Mfg date</span>
+              <span id="detail_mfg" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Exp date</span>
+              <span id="detail_exp" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">Supplier batch</span>
+              <span id="detail_supplier_batch" class="flex-1 text-right"></span>
+            </div>
+            <div class="flex justify-between gap-3">
+              <span class="font-semibold text-slate-600 w-28">QR code ID</span>
+              <span id="detail_qr" class="flex-1 text-right break-all"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Staff -->
+      <section id="staff-section" class="hidden">
+        <h2 class="text-xl font-bold text-blue-700 mb-4">Staff</h2>
+        <p>Manage staff roles and permissions.</p>
+      </section>
+
+      <!-- Admin · Compliance list -->
+      <section id="admin-compliance-section" class="hidden">
+        <div class="max-w-6xl mx-auto py-8 px-4">
+          <h1 class="text-2xl font-semibold text-slate-900 mb-4">Compliance list</h1>
+
+          <!-- Filters / summary -->
+          <div class="grid gap-4 md:grid-cols-3 mb-6">
+            <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
+              <p class="text-xs text-slate-500">Active policies</p>
+              <p class="text-2xl font-bold text-slate-900">0</p>
+            </div>
+            <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
+              <p class="text-xs text-slate-500">Expiring soon</p>
+              <p class="text-2xl font-bold text-slate-900">0</p>
+            </div>
+            <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
+              <p class="text-xs text-slate-500">Last audit</p>
+              <p class="text-sm font-medium text-slate-900">Not configured</p>
+            </div>
+          </div>
+
+          <!-- Table placeholder -->
+          <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-sm font-semibold text-slate-800">Compliance rules</h2>
+              <button class="text-xs px-3 py-1 rounded-full bg-slate-900 text-slate-100 hover:bg-slate-800">
+                New rule
+              </button>
+            </div>
+            <p class="text-xs text-slate-500">
+              No compliance rules yet. Configure expiry checks, storage rules, and audit requirements here.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin · Roles & access -->
+      <section id="admin-roles-section" class="hidden">
+        <div class="max-w-6xl mx-auto py-8 px-4">
+          <h1 class="text-2xl font-semibold text-slate-900 mb-4">Roles & access</h1>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Roles overview -->
+            <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-semibold text-slate-800">Defined roles</h2>
+                <button class="text-xs px-3 py-1 rounded-full bg-slate-900 text-slate-100 hover:bg-slate-800">
+                  Add role
+                </button>
+              </div>
+              <ul class="text-xs text-slate-600 space-y-1">
+                <li><span class="font-semibold text-slate-800">Admin:</span> full access to all modules.</li>
+                <li><span class="font-semibold text-slate-800">Manager:</span> approve purchases, manage inventory.</li>
+                <li><span class="font-semibold text-slate-800">Staff:</span> view and update stock only.</li>
+                <li><span class="font-semibold text-slate-800">Viewer:</span> read‑only dashboards.</li>
+              </ul>
+            </div>
+
+            <!-- Permissions matrix placeholder -->
+            <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
+              <h2 class="text-sm font-semibold text-slate-800 mb-3">Permissions matrix</h2>
+              <p class="text-xs text-slate-500 mb-2">
+                Later this will show which actions each role can perform (view, create, approve, delete).
+              </p>
+              <div class="border border-dashed border-slate-300 rounded-xl p-4 text-center text-xs text-slate-400">
+                RBAC table placeholder
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin · User accounts -->
+      <section id="admin-accounts-section" class="hidden">
+        <div class="max-w-6xl mx-auto py-8 px-4">
+          <h1 class="text-2xl font-semibold text-slate-900 mb-4">User accounts</h1>
+
+          <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow mb-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-slate-800">Accounts</p>
+                <p class="text-xs text-slate-500">Create accounts and assign roles.</p>
+              </div>
+              <button class="text-xs px-3 py-1 rounded-full bg-emerald-500 text-white hover:bg-emerald-600">
+                New account
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
+            <table class="w-full text-xs text-left text-slate-600">
+              <thead class="text-slate-500 border-b border-slate-200">
+                <tr>
+                  <th class="py-2">User</th>
+                  <th class="py-2">Email</th>
+                  <th class="py-2">Role</th>
+                  <th class="py-2 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="py-2">–</td>
+                  <td class="py-2">No users yet</td>
+                  <td class="py-2">–</td>
+                  <td class="py-2 text-right">
+                    <span class="text-[11px] text-slate-400">Connect to backend later</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin · Activity logs -->
+      <section id="admin-logs-section" class="hidden">
+        <div class="max-w-6xl mx-auto py-8 px-4">
+          <h1 class="text-2xl font-semibold text-slate-900 mb-4">Activity logs</h1>
+
+          <div class="grid gap-4 md:grid-cols-3 mb-6">
+            <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
+              <p class="text-xs text-slate-500">Events today</p>
+              <p class="text-2xl font-bold text-slate-900">0</p>
+            </div>
+            <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
+              <p class="text-xs text-slate-500">Admin actions</p>
+              <p class="text-2xl font-bold text-slate-900">0</p>
+            </div>
+            <div class="rounded-2xl bg-white/60 backdrop-blur p-4 shadow">
+              <p class="text-xs text-slate-500">Last login</p>
+              <p class="text-sm font-medium text-slate-900">Not recorded</p>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-white/70 backdrop-blur p-4 shadow">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-sm font-semibold text-slate-800">Audit trail</h2>
+              <div class="flex gap-2">
+                <input type="text" placeholder="Filter by user or action"
+                  class="text-xs px-3 py-1 rounded-full border border-slate-200 focus:outline-none focus:ring-1 focus:ring-slate-300 bg-white/80" />
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mb-2">
+              Behavioral logging will record approvals, role changes, and inventory adjustments here.
+            </p>
+            <div class="border border-dashed border-slate-300 rounded-xl p-4 text-center text-xs text-slate-400">
+              No log entries yet.
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <footer class="text-center py-4 text-gray-500 bg-transparent">
+      &copy; 2025 Premierlux Dental Clinic
+    </footer>
   </div>
-</section>
-
-
-      </main>
-
-      <footer class="text-center py-4 text-gray-500 bg-transparent">
-        &copy; 2025 Premierlux Dental Clinic
-      </footer>
-    </div>
   </div>
 
   <!--Batch successfully added!-->
-<div id="toast"
-     class="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs shadow-lg hidden z-50">
-  Batch successfully added!
-</div>
+  <div id="toast"
+    class="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs shadow-lg hidden z-50">
+    Batch successfully added!
+  </div>
 
 
 
   <script>
     let currentUserRole = 'admin';
-// API endpoints
-  
-const API_URL = "http://127.0.0.1:5000/api/inventory";
-const BRANCHES_API_URL = "http://127.0.0.1:5000/api/branches";
-const API_BASE = "http://127.0.0.1:5000";
-const ALERTS_API_URL = `${API_BASE}/api/alerts`;
+    // API endpoints
+
+    const API_URL = "http://127.0.0.1:5000/api/inventory";
+    const BRANCHES_API_URL = "http://127.0.0.1:5000/api/branches";
+    const API_BASE = "http://127.0.0.1:5000";
+    const ALERTS_API_URL = `${API_BASE}/api/alerts`;
+    const SUPPLIERS_API_URL = `${API_BASE}/api/suppliers`;
 
 
 
 
-   
- function toggleMenu(id) {
-  const menu = document.getElementById(id);
-  const isOpen = menu.classList.contains('opacity-100');
 
-  // close all first (optional)
-  document.querySelectorAll('.nav-dropdown').forEach(dd => {
-    dd.classList.add('invisible', 'opacity-0');
-    dd.classList.remove('opacity-100');
-  });
+    function toggleMenu(id) {
+      const menu = document.getElementById(id);
+      const isOpen = menu.classList.contains('opacity-100');
 
-  if (!isOpen) {
-    menu.classList.remove('invisible', 'opacity-0');
-    menu.classList.add('opacity-100');
-  }
-}
+      // close all first (optional)
+      document.querySelectorAll('.nav-dropdown').forEach(dd => {
+        dd.classList.add('invisible', 'opacity-0');
+        dd.classList.remove('opacity-100');
+      });
+
+      if (!isOpen) {
+        menu.classList.remove('invisible', 'opacity-0');
+        menu.classList.add('opacity-100');
+      }
+    }
 
 
-  // Optional: close menus when clicking outside
-  document.addEventListener('click', (e) => {
-    const root = e.target.closest('[data-menu-root]');
-    if (!root) {
-      document.querySelectorAll('[id$="Menu"]').forEach(m => {
-        m.classList.add('opacity-0', 'invisible');
+    // Optional: close menus when clicking outside
+    document.addEventListener('click', (e) => {
+      const root = e.target.closest('[data-menu-root]');
+      if (!root) {
+        document.querySelectorAll('[id$="Menu"]').forEach(m => {
+          m.classList.add('opacity-0', 'invisible');
+        });
+      }
+    });
+
+    // Batch overlay
+    function openBatchOverlay() {
+      const overlay = document.getElementById('batchOverlay');
+      if (overlay) overlay.classList.remove('hidden');
+
+      // Load branches for both the main filter and the batch form
+      fetchBranches(branches => {
+        updateBranchSelect(branches);       // existing main dropdown (if you use it)
+        updateBatchBranchSelect(branches);  // NEW: Add Batch dropdown
       });
     }
-  });
-    
-    // Batch overlay
-function openBatchOverlay() {
-  const overlay = document.getElementById('batchOverlay');
-  if (overlay) overlay.classList.remove('hidden');
 
-  // Load branches for both the main filter and the batch form
-  fetchBranches(branches => {
-    updateBranchSelect(branches);       // existing main dropdown (if you use it)
-    updateBatchBranchSelect(branches);  // NEW: Add Batch dropdown
-  });
-}
 
 
 
@@ -1108,127 +962,127 @@ function openBatchOverlay() {
       overlay.classList.add('hidden');
     }
 
-async function submitBatchForm(e) {
-  e.preventDefault();
-  const payload = {
-    item_name: document.getElementById('batch_item_name').value.trim(),
-    sku: document.getElementById('batch_sku').value.trim(),
-    branch: document.getElementById('batch_branch').value,
-    current_stock: Number(document.getElementById('batch_current_stock').value || 0),
-    monthly_usage: Number(document.getElementById('batch_monthly_usage').value || 0),
-    price: Number(document.getElementById('batch_price').value || 0),
-    reorder_level: Number(document.getElementById('batch_reorder_level').value || 0),
-    batch_number: document.getElementById('batch_batch_number').value.trim(),
-    lot_number: document.getElementById('batch_lot_number').value.trim(),
-    mfg_date: document.getElementById('batch_mfg_date').value,
-    exp_date: document.getElementById('batch_exp_date').value,
-    supplier_batch: document.getElementById('batch_supplier_batch').value.trim(),
-    qr_code_id: document.getElementById('batch_qr_code_id').value.trim()
-  };
+    async function submitBatchForm(e) {
+      e.preventDefault();
+      const payload = {
+        item_name: document.getElementById('batch_item_name').value.trim(),
+        sku: document.getElementById('batch_sku').value.trim(),
+        branch: document.getElementById('batch_branch').value,
+        current_stock: Number(document.getElementById('batch_current_stock').value || 0),
+        monthly_usage: Number(document.getElementById('batch_monthly_usage').value || 0),
+        price: Number(document.getElementById('batch_price').value || 0),
+        reorder_level: Number(document.getElementById('batch_reorder_level').value || 0),
+        batch_number: document.getElementById('batch_batch_number').value.trim(),
+        lot_number: document.getElementById('batch_lot_number').value.trim(),
+        mfg_date: document.getElementById('batch_mfg_date').value,
+        exp_date: document.getElementById('batch_exp_date').value,
+        supplier_batch: document.getElementById('batch_supplier_batch').value.trim(),
+        qr_code_id: document.getElementById('batch_qr_code_id').value.trim()
+      };
 
-  try {
-    const res = await fetch(`${API_BASE}/api/batches`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+      try {
+        const res = await fetch(`${API_BASE}/api/batches`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-    const data = await res.json();
-    if (!res.ok) {
-      alert(`Error creating batch: ${data.error || res.statusText}`);
-      return;
+        const data = await res.json();
+        if (!res.ok) {
+          alert(`Error creating batch: ${data.error || res.statusText}`);
+          return;
+        }
+
+        showToast('Batch successfully added!');  // small notification
+        closeBatchOverlay();
+        fetchInventory();                        // refresh cards / totals
+      } catch (err) {
+        console.error("Batch create error:", err);
+        alert("Could not create batch. Check console for details.");
+      }
     }
 
-    showToast('Batch successfully added!');  // small notification
-    closeBatchOverlay();
-    fetchInventory();                        // refresh cards / totals
-  } catch (err) {
-    console.error("Batch create error:", err);
-    alert("Could not create batch. Check console for details.");
-  }
-}
 
+    // Page switching + analytics
+    function showPage(page) {
+      const sections = [
+        'dashboard-section',
+        'inventory-section',
+        'branches-section',
+        'orders-section',
+        'suppliers-section',
+        'compliance-section',
+        'qr-section',
+        'admin-suppliers-section',
+        'admin-roles-section',
+        'admin-logs-section',
+        'admin-accounts-section'
+      ];
 
-// Page switching + analytics
-function showPage(page) {
-  const sections = [
-    'dashboard-section',
-    'inventory-section',
-    'branches-section',
-    'orders-section',
-    'suppliers-section',
-    'compliance-section',
-    'qr-section',
-    'admin-suppliers-section',
-    'admin-roles-section',
-    'admin-logs-section',
-    'admin-accounts-section'
-  ];
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
 
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add('hidden');
-  });
+      closeAllDropdowns();
 
-  closeAllDropdowns();
+      const target = document.getElementById(page + '-section');
+      if (target) target.classList.remove('hidden');
 
-  const target = document.getElementById(page + '-section');
-  if (target) target.classList.remove('hidden');
+      // per-page logic
+      if (page === 'dashboard') {
+        fetchLowStock();
+        fetchTotalInventory();
+        fetchBranchesCount();
+        initDashboardAnalytics();
+        fetchAlertsForBell();
+        fetchReplenishSummary();
+      }
 
-  // per-page logic
-  if (page === 'dashboard') {
-    fetchLowStock();
-    fetchTotalInventory();
-    fetchBranchesCount();
-    initDashboardAnalytics();
-    fetchAlertsForBell();
-    fetchReplenishSummary();
-  }
+      if (page === 'inventory') {
+        fetchBranches(updateBranchSelect);
+        fetchInventory();
+      }
 
-  if (page === 'inventory') {
-    fetchBranches(updateBranchSelect);
-    fetchInventory();
-  }
+      if (page === 'branches') {
+        fetchBranches(renderBranchesTable);
+      }
 
-  if (page === 'branches') {
-    fetchBranches(renderBranchesTable);
-  }
+      if (page === 'suppliers' && typeof fetchSuppliers === 'function') {
+        fetchSuppliers();
+      }
 
-  if (page === 'suppliers' && typeof fetchSuppliers === 'function') {
-    fetchSuppliers();
-  }
+      if (page === 'admin-roles' && typeof fetchRoles === 'function') {
+        fetchRoles();
+      }
 
-  if (page === 'admin-roles' && typeof fetchRoles === 'function') {
-    fetchRoles();
-  }
+      if (page === 'admin-logs' && typeof fetchActivityLogs === 'function') {
+        fetchActivityLogs();
+      }
+    }
 
-  if (page === 'admin-logs' && typeof fetchActivityLogs === 'function') {
-    fetchActivityLogs();
-  }
-}
+    const REPLENISH_API_URL = `${API_BASE}/api/replenishment/recommendations`;
 
-const REPLENISH_API_URL = `${API_BASE}/api/replenishment/recommendations`;
+    function renderReplenishSummary(recs) {
+      const card = document.getElementById('replenish-summary-card');
+      const list = document.getElementById('replenish-summary-list');
+      if (!card || !list) return;
 
-function renderReplenishSummary(recs) {
-  const card = document.getElementById('replenish-summary-card');
-  const list = document.getElementById('replenish-summary-list');
-  if (!card || !list) return;
+      if (!recs || recs.length === 0) {
+        card.classList.add('hidden');
+        return;
+      }
 
-  if (!recs || recs.length === 0) {
-    card.classList.add('hidden');
-    return;
-  }
+      card.classList.remove('hidden');
+      list.innerHTML = '';
 
-  card.classList.remove('hidden');
-  list.innerHTML = '';
+      recs.slice(0, 3).forEach(r => {
+        const li = document.createElement('li');
+        li.className =
+          'rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 ' +
+          'px-3 py-2 flex justify-between gap-2 text-xs';
 
-  recs.slice(0, 3).forEach(r => {
-    const li = document.createElement('li');
-    li.className =
-      'rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 ' +
-      'px-3 py-2 flex justify-between gap-2 text-xs';
-
-    li.innerHTML = `
+        li.innerHTML = `
       <span class="truncate">
         <span class="font-semibold">${r.name}</span>
         <span class="text-[11px] text-slate-500">
@@ -1239,57 +1093,57 @@ function renderReplenishSummary(recs) {
         +${r.suggested_order_qty}
       </span>
     `;
-    list.appendChild(li);
-  });
-}
+        list.appendChild(li);
+      });
+    }
 
 
-function fetchReplenishSummary() {
-  // Only meaningful for admins
-  if (typeof currentUserRole !== 'undefined' && currentUserRole !== 'admin') return;
+    function fetchReplenishSummary() {
+      // Only meaningful for admins
+      if (typeof currentUserRole !== 'undefined' && currentUserRole !== 'admin') return;
 
-  fetch(REPLENISH_API_URL)
-    .then(res => res.json())
-    .then(renderReplenishSummary)
-    .catch(err => {
-      console.error('Error fetching replenishment recommendations', err);
-    });
-}
+      fetch(REPLENISH_API_URL)
+        .then(res => res.json())
+        .then(renderReplenishSummary)
+        .catch(err => {
+          console.error('Error fetching replenishment recommendations', err);
+        });
+    }
 
 
 
-// Inventory
-// Inventory
-function renderInventoryCards(items) {
-  const container = document.getElementById('inventoryCards');
-  const emptyState = document.getElementById('inventoryEmptyState');
-  if (!container) return;
-  container.innerHTML = '';
+    // Inventory
+    // Inventory
+    function renderInventoryCards(items) {
+      const container = document.getElementById('inventoryCards');
+      const emptyState = document.getElementById('inventoryEmptyState');
+      if (!container) return;
+      container.innerHTML = '';
 
-  const currentBranch = document.getElementById('branchSelect')?.value || 'All';
+      const currentBranch = document.getElementById('branchSelect')?.value || 'All';
 
-  const visibleItems = items.filter(
-    item => currentBranch === 'All' || item.branch === currentBranch
-  );
+      const visibleItems = items.filter(
+        item => currentBranch === 'All' || item.branch === currentBranch
+      );
 
-  if (visibleItems.length === 0) {
-    if (emptyState) emptyState.classList.remove('hidden');
-  } else {
-    if (emptyState) emptyState.classList.add('hidden');
-  }
+      if (visibleItems.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+      } else {
+        if (emptyState) emptyState.classList.add('hidden');
+      }
 
-  visibleItems.forEach(item => {
-  const card = document.createElement('div');
-card.className =
-  "rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-lg px-4 py-3 flex flex-col gap-2 " +
-  "hover:-translate-y-0.5 hover:shadow-xl transition-transform transition-shadow duration-200 cursor-pointer";
+      visibleItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className =
+          "rounded-2xl bg-white/30 backdrop-blur-xl border border-white/40 shadow-lg px-4 py-3 flex flex-col gap-2 " +
+          "hover:-translate-y-0.5 hover:shadow-xl transition-transform transition-shadow duration-200 cursor-pointer";
 
-    // Click card = open details overlay
-    card.onclick = () => openItemDetails(item);
+        // Click card = open details overlay
+        card.onclick = () => openItemDetails(item);
 
-    const isLow = item.quantity <= item.reorder_level;
+        const isLow = item.quantity <= item.reorder_level;
 
-    card.innerHTML = `
+        card.innerHTML = `
       <div class="flex items-start justify-between gap-2">
         <div class="flex flex-col">
           <span class="text-sm font-semibold text-slate-900 truncate">${item.name}</span>
@@ -1346,54 +1200,54 @@ card.className =
       </div>
     `;
 
-    container.appendChild(card);
-  });
-}
+        container.appendChild(card);
+      });
+    }
 
-function renderAlertsDropdown(alerts) {
-  const list = document.getElementById('alertsDropdownList');
-  const badge = document.getElementById('alertsBadge');
-  if (!list) return;
+    function renderAlertsDropdown(alerts) {
+      const list = document.getElementById('alertsDropdownList');
+      const badge = document.getElementById('alertsBadge');
+      if (!list) return;
 
-  list.innerHTML = '';
+      list.innerHTML = '';
 
-  if (!alerts || alerts.length === 0) {
-    list.innerHTML = `
+      if (!alerts || alerts.length === 0) {
+        list.innerHTML = `
       <div class="text-[11px] text-slate-400">
         No active alerts. Inventory is within safe ranges.
       </div>
     `;
-    if (badge) {
-      badge.classList.add('hidden');
-      badge.textContent = '0';
-    }
-    return;
-  }
+        if (badge) {
+          badge.classList.add('hidden');
+          badge.textContent = '0';
+        }
+        return;
+      }
 
-  if (badge) {
-    badge.classList.remove('hidden');
-    badge.textContent = alerts.length > 9 ? '9+' : String(alerts.length);
-  }
+      if (badge) {
+        badge.classList.remove('hidden');
+        badge.textContent = alerts.length > 9 ? '9+' : String(alerts.length);
+      }
 
-  alerts.forEach(a => {
-    const colorBar =
-      a.severity === 'high'
-        ? 'bg-rose-500'
-        : a.severity === 'medium'
-        ? 'bg-amber-400'
-        : 'bg-emerald-400';
+      alerts.forEach(a => {
+        const colorBar =
+          a.severity === 'high'
+            ? 'bg-rose-500'
+            : a.severity === 'medium'
+              ? 'bg-amber-400'
+              : 'bg-emerald-400';
 
-    const chip =
-      a.type === 'low_stock' ? 'Low stock'
-      : a.type === 'expiry_risk' ? 'Expiry risk'
-      : a.type === 'branch_low_stock' ? 'Branch alert'
-      : a.type === 'usage_anomaly' ? 'Usage anomaly'
-      : 'Alert';
+        const chip =
+          a.type === 'low_stock' ? 'Low stock'
+            : a.type === 'expiry_risk' ? 'Expiry risk'
+              : a.type === 'branch_low_stock' ? 'Branch alert'
+                : a.type === 'usage_anomaly' ? 'Usage anomaly'
+                  : 'Alert';
 
-    const div = document.createElement('div');
-    div.className = 'rounded-xl bg-white/5 border border-slate-700/60 p-3 flex gap-2';
+        const div = document.createElement('div');
+        div.className = 'rounded-xl bg-white/5 border border-slate-700/60 p-3 flex gap-2';
 
-    div.innerHTML = `
+        div.innerHTML = `
       <div class="w-1 rounded-full ${colorBar}"></div>
       <div class="flex-1 space-y-1">
         <div class="flex items-center justify-between gap-2">
@@ -1414,133 +1268,128 @@ function renderAlertsDropdown(alerts) {
       </div>
     `;
 
-    list.appendChild(div);
-  });
-}
-
-let dismissedAlertIds = new Set();
-
-function acknowledgeAlert(id) {
-  fetch(`${ALERTS_API_URL}/${encodeURIComponent(id)}/acknowledge`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-User-Id': 'demo-admin',
-      'X-User-Name': 'Demo Admin'
-    },
-    body: JSON.stringify({})
-  })
-    .then(() => {
-      fetchAlertsForBell();
-    })
-    .catch(err => {
-      console.error('Error acknowledging alert', err);
-    });
-}
-
-
-
-function fetchAlertsForBell() {
-  fetch(ALERTS_API_URL, {
-    headers: {
-      'X-User-Id': 'demo-admin',      // replace with real current user later
-      'X-User-Name': 'Demo Admin'
-    }
-  })
-    .then(res => res.json())
-    .then(alerts => {
-      renderAlertsDropdown(alerts);
-    })
-    .catch(err => {
-      console.error('Error fetching alerts', err);
-    });
-}
-
-
-
-
-function fetchInventory() {
-  console.log("fetchInventory called");
-  fetch(API_URL)
-    .then(res => {
-      console.log("Inventory response status", res.status);
-      return res.json();
-    })
-    .then(data => {
-      console.log("Inventory data", data);
-      renderInventoryCards(data);
-    })
-    .catch(err => console.error("fetchInventory error", err));
-}
-
-
-function updateBranchSelect(branches) {
-  const branchSelect = document.getElementById('branchSelect');
-  if (!branchSelect) return;
-
-  branchSelect.innerHTML = '';
-  const allOpt = document.createElement('option');
-  allOpt.value = 'All';
-  allOpt.textContent = 'All branches';
-  branchSelect.appendChild(allOpt);
-
-  branches.forEach(branch => {
-    const option = document.createElement('option');
-    option.value = branch.name;
-    option.textContent = branch.name;
-    branchSelect.appendChild(option);
-  });
-}
-
-function deleteItem(name) {
-  fetch(`${API_URL}/${encodeURIComponent(name)}`, {
-    method: 'DELETE'
-  })
-    .then(res => res.json())
-    .then(() => {
-      fetchInventory();        // already there
-      fetchTotalInventory();   // NEW: refresh KPI
-    });
-}
-
-
-
-
-
-
-
-
- async function adjustItemQuantity(name, branch, delta) {
-  try {
-    console.log('Adjust start', { name, branch, delta });
-
-    const res = await fetch(`${API_BASE}/api/inventory/${encodeURIComponent(name)}/adjust`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ branch, delta })
-    });
-    const data = await res.json();
-    console.log('Adjust response', res.status, data);
-
-    if (!res.ok) {
-      console.error("Adjust error", data);
-      alert(data.error || "Could not update quantity");
-      return;
+        list.appendChild(div);
+      });
     }
 
-    console.log('Adjust OK, refreshing UI');
-    fetchInventory();
+    let dismissedAlertIds = new Set();
 
-    console.log('Calling fetchTotalInventory from adjust');
-    fetchTotalInventory();      // must exist
+    function acknowledgeAlert(id) {
+      fetch(`${ALERTS_API_URL}/${encodeURIComponent(id)}/acknowledge`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Id': 'demo-admin',
+          'X-User-Name': 'Demo Admin'
+        },
+        body: JSON.stringify({})
+      })
+        .then(() => {
+          fetchAlertsForBell();
+        })
+        .catch(err => {
+          console.error('Error acknowledging alert', err);
+        });
+    }
 
-    console.log('Calling fetchLowStock from adjust');
-    fetchLowStock();            // optional
-  } catch (err) {
-    console.error("Adjust error", err);
-    alert("Network error while updating quantity");
-  }
-}
+
+
+    function fetchAlertsForBell() {
+      fetch(ALERTS_API_URL, {
+        headers: {
+          'X-User-Id': 'demo-admin',      // replace with real current user later
+          'X-User-Name': 'Demo Admin'
+        }
+      })
+        .then(res => res.json())
+        .then(alerts => {
+          renderAlertsDropdown(alerts);
+        })
+        .catch(err => {
+          console.error('Error fetching alerts', err);
+        });
+    }
+
+
+
+
+    function fetchInventory() {
+      console.log("fetchInventory called");
+      fetch(API_URL)
+        .then(res => {
+          console.log("Inventory response status", res.status);
+          return res.json();
+        })
+        .then(data => {
+          console.log("Inventory data", data);
+          renderInventoryCards(data);
+        })
+        .catch(err => console.error("fetchInventory error", err));
+    }
+
+
+    function updateBranchSelect(branches) {
+      const branchSelect = document.getElementById('branchSelect');
+      if (!branchSelect) return;
+
+      branchSelect.innerHTML = '';
+      const allOpt = document.createElement('option');
+      allOpt.value = 'All';
+      allOpt.textContent = 'All branches';
+      branchSelect.appendChild(allOpt);
+
+      branches.forEach(branch => {
+        const option = document.createElement('option');
+        option.value = branch.name;
+        option.textContent = branch.name;
+        branchSelect.appendChild(option);
+      });
+    }
+
+    function deleteItem(name) {
+      fetch(`${API_URL}/${encodeURIComponent(name)}`, {
+        method: 'DELETE'
+      })
+        .then(res => res.json())
+        .then(() => {
+          fetchInventory();        // already there
+          fetchTotalInventory();   // NEW: refresh KPI
+        });
+    }
+
+
+
+    async function adjustItemQuantity(name, branch, delta) {
+      try {
+        console.log('Adjust start', { name, branch, delta });
+
+        const res = await fetch(`${API_BASE}/api/inventory/${encodeURIComponent(name)}/adjust`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ branch, delta })
+        });
+        const data = await res.json();
+        console.log('Adjust response', res.status, data);
+
+        if (!res.ok) {
+          console.error("Adjust error", data);
+          alert(data.error || "Could not update quantity");
+          return;
+        }
+
+        console.log('Adjust OK, refreshing UI');
+        fetchInventory();
+
+        console.log('Calling fetchTotalInventory from adjust');
+        fetchTotalInventory();      // must exist
+
+        console.log('Calling fetchLowStock from adjust');
+        fetchLowStock();            // optional
+      } catch (err) {
+        console.error("Adjust error", err);
+        alert("Network error while updating quantity");
+      }
+    }
 
 
 
@@ -1603,33 +1452,33 @@ function deleteItem(name) {
     }
 
     // Branches
-function fetchBranches(callback) {
-  fetch(`${API_BASE}/api/branches`)
-    .then(res => res.json())
-    .then(data => {
-      if (typeof callback === 'function') callback(data);
-    })
-    .catch(err => console.error('fetchBranches error', err));
-}
+    function fetchBranches(callback) {
+      fetch(`${API_BASE}/api/branches`)
+        .then(res => res.json())
+        .then(data => {
+          if (typeof callback === 'function') callback(data);
+        })
+        .catch(err => console.error('fetchBranches error', err));
+    }
 
-function updateBatchBranchSelect(branches) {
-  const sel = document.getElementById('batch_branch');
-  if (!sel) return;
+    function updateBatchBranchSelect(branches) {
+      const sel = document.getElementById('batch_branch');
+      if (!sel) return;
 
-  sel.innerHTML = '';
+      sel.innerHTML = '';
 
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = 'Select branch';
-  sel.appendChild(placeholder);
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select branch';
+      sel.appendChild(placeholder);
 
-  branches.forEach(branch => {
-    const opt = document.createElement('option');
-    opt.value = branch.name;
-    opt.textContent = branch.name;
-    sel.appendChild(opt);
-  });
-}
+      branches.forEach(branch => {
+        const opt = document.createElement('option');
+        opt.value = branch.name;
+        opt.textContent = branch.name;
+        sel.appendChild(opt);
+      });
+    }
 
 
 
@@ -1690,48 +1539,115 @@ function updateBatchBranchSelect(branches) {
       }
     }
 
+    async function fetchBranches() {
+      try {
+        const res = await fetch(`${API_BASE}/api/branches`);
+        const branches = await res.json();
+
+        const tbody = document.getElementById('branchesTableBody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        branches.forEach(b => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+        <td class="px-4 py-2">${b.name || ''}</td>
+        <td class="px-4 py-2">${b.address || ''}</td>
+        <td class="px-4 py-2">${b.manager || ''}</td>
+      `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Failed to load branches', err);
+      }
+    }
+
+    async function saveBranch() {
+      const name = document.getElementById('branchName').value.trim();
+      const address = document.getElementById('branchAddress').value.trim();
+      const manager = document.getElementById('branchManager').value.trim();
+
+      if (!name) {
+        alert('Branch name is required');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/branches`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, address, manager }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Failed to add branch');
+          return;
+        }
+
+        // Clear inputs and refresh list + KPI
+        document.getElementById('branchName').value = '';
+        document.getElementById('branchAddress').value = '';
+        document.getElementById('branchManager').value = '';
+        await fetchBranches();
+        await fetchBranchesCount?.(); // if you already have this for the KPI card
+      } catch (err) {
+        console.error('Error adding branch', err);
+        alert('Network error adding branch');
+      }
+    }
+
+    // Attach the click handler once DOM is ready
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('addBranchBtn');
+      if (btn) {
+        btn.addEventListener('click', saveBranch);
+      }
+    });
+
+
     // Dashboard cards
-function fetchLowStock() {
-  fetch(`${API_BASE}/api/low-stock-count`)
-    .then(res => res.json())
-    .then(data => {
-      const el = document.getElementById('low-stock-count');
-      if (el) el.textContent = data.count;
-    });
-}
+    function fetchLowStock() {
+      fetch(`${API_BASE}/api/low-stock-count`)
+        .then(res => res.json())
+        .then(data => {
+          const el = document.getElementById('low-stock-count');
+          if (el) el.textContent = data.count;
+        });
+    }
 
-function fetchTotalInventory() {
-  console.log('fetchTotalInventory called');
-  fetch(`${API_BASE}/api/total-inventory`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('Total inventory data', data);
-      const el = document.getElementById('total-inventory');
-      if (!el) return;
+    function fetchTotalInventory() {
+      console.log('fetchTotalInventory called');
+      fetch(`${API_BASE}/api/total-inventory`)
+        .then(res => res.json())
+        .then(data => {
+          console.log('Total inventory data', data);
+          const el = document.getElementById('total-inventory');
+          if (!el) return;
 
-      const value = data.value || 0;
-      el.textContent = `₱${value.toLocaleString('en-PH', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })}`;
-    })
-    .catch(err => {
-      console.error('Error fetching total inventory', err);
-    });
-}
-
-
+          const value = data.value || 0;
+          el.textContent = `₱${value.toLocaleString('en-PH', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })}`;
+        })
+        .catch(err => {
+          console.error('Error fetching total inventory', err);
+        });
+    }
 
 
 
-function fetchBranchesCount() {
-  fetch(`${API_BASE}/api/branches-count`)
-    .then(res => res.json())
-    .then(data => {
-      const el = document.getElementById('branches-count');
-      if (el) el.textContent = data.count;
-    });
-}
+
+
+    function fetchBranchesCount() {
+      fetch(`${API_BASE}/api/branches-count`)
+        .then(res => res.json())
+        .then(data => {
+          const el = document.getElementById('branches-count');
+          if (el) el.textContent = data.count;
+        });
+    }
 
 
     // AI helpers
@@ -1782,543 +1698,639 @@ function fetchBranchesCount() {
       output.scrollTop = output.scrollHeight;
     }
 
-async function handleForecast() {
-  const input = document.getElementById("forecast-input");
-  const output = document.getElementById("forecast-output");
-  if (!input || !output) return;
+    async function handleForecast() {
+      const input = document.getElementById("forecast-input");
+      const output = document.getElementById("forecast-output");
+      if (!input || !output) return;
 
-  const item = input.value.trim();
-  if (!item) return;
+      const item = input.value.trim();
+      if (!item) return;
 
-  // show loading text
-  output.value = "Generating 7-day forecast...";
+      // show loading text
+      output.value = "Generating 7-day forecast...";
 
-  const data = await getForecastForItem(item);
+      const data = await getForecastForItem(item);
 
-  if (data.error) {
-    output.value = `Error: ${data.error}`;
-  } else if (data.daily_forecast) {
-    output.value =
-      `Item: ${data.item}\n` +
-      `History points: ${data.history_points}\n` +
-      `7-day forecast: ${data.daily_forecast.map(v => Number(v).toFixed(2)).join(", ")}`;
-  } else {
-    output.value = JSON.stringify(data, null, 2);
-  }
-}
+      if (data.error) {
+        output.value = `Error: ${data.error}`;
+      } else if (data.daily_forecast) {
+        output.value =
+          `Item: ${data.item}\n` +
+          `History points: ${data.history_points}\n` +
+          `7-day forecast: ${data.daily_forecast.map(v => Number(v).toFixed(2)).join(", ")}`;
+      } else {
+        output.value = JSON.stringify(data, null, 2);
+      }
+    }
 
 
     async function loadAiDashboard() {
-  try {
-    const res = await fetch(`${API_BASE}/api/ai/dashboard`);
-    if (!res.ok) return;
-    const data = await res.json();
-    applyAiDashboardToCards(data);
-  } catch (err) {
-    console.error("AI dashboard load error", err);
-  }
-}
-
-function applyAiDashboardToCards(data) {
-  const summaryText = data.summary_text || "";
-  const riskText = data.risk_text || "";
-  const updatedAt = data.updated_at || null;
-  const totalItems = data.total_items ?? null;
-  const totalCost = data.total_cost ?? null;
-  const lowStockCount = data.low_stock_count ?? null;
-
-  const summaryEl = document.getElementById("aiSummaryText");
-  const riskEl = document.getElementById("aiRiskText");
-  const statsEl = document.getElementById("aiSummaryStats");
-  const upd1 = document.getElementById("aiSummaryUpdated");
-  const upd2 = document.getElementById("aiRiskUpdated");
-  const lowEl = document.getElementById("aiRiskLowStock");
-
-  // set main texts
-  if (summaryEl) {
-    summaryEl.textContent = summaryText || "No AI summary available yet.";
-    summaryEl.classList.remove("animate-pulse", "bg-slate-100", "px-2", "py-1", "rounded-lg");
-  }
-  if (riskEl) {
-    riskEl.textContent = riskText || "No AI risk analysis available yet.";
-    riskEl.classList.remove("animate-pulse", "bg-slate-100", "px-2", "py-1", "rounded-lg");
-  }
-
-  // stats
-  if (statsEl && totalItems !== null && totalCost !== null) {
-    statsEl.textContent = `Items: ${totalItems} • Total cost: ₱${Number(totalCost).toFixed(2)}`;
-  }
-  if (lowEl && lowStockCount !== null) {
-    lowEl.textContent = `Low stock items: ${lowStockCount}`;
-  }
-
-  // timestamps
-  if (updatedAt) {
-    const d = new Date(updatedAt);
-    const nice = isNaN(d.getTime()) ? updatedAt : d.toLocaleString();
-    if (upd1) upd1.textContent = `Last updated: ${nice}`;
-    if (upd2) upd2.textContent = `Last updated: ${nice}`;
-  }
-}
-
-
-let aiDashboardLoading = false;
-
-async function refreshAiDashboard() {
-  if (aiDashboardLoading) return;
-  aiDashboardLoading = true;
-
-  const btnLabel = document.getElementById("aiRefreshLabel");
-  const riskBtn = document.querySelector("#aiRiskCard button");
-  const spinner = document.getElementById("aiRefreshSpinner");
-
-  if (btnLabel) btnLabel.textContent = "Refreshing...";
-  if (spinner) spinner.classList.remove("hidden");
-  if (riskBtn) {
-    riskBtn.disabled = true;
-    riskBtn.classList.add("opacity-60", "cursor-not-allowed");
-  }
-
-  try {
-    const res = await fetch(`${API_BASE}/api/ai/dashboard/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" }
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data.error || "Failed to refresh AI analytics");
-      return;
+      try {
+        const res = await fetch(`${API_BASE}/api/ai/dashboard`);
+        if (!res.ok) return;
+        const data = await res.json();
+        applyAiDashboardToCards(data);
+      } catch (err) {
+        console.error("AI dashboard load error", err);
+      }
     }
-    applyAiDashboardToCards(data);
-  } catch (err) {
-    console.error("AI dashboard refresh error", err);
-    alert("Could not refresh AI analytics");
-  } finally {
-    aiDashboardLoading = false;
-    if (btnLabel) btnLabel.textContent = "Refresh";
-    if (spinner) spinner.classList.add("hidden");
-    if (riskBtn) {
-      riskBtn.disabled = false;
-      riskBtn.classList.remove("opacity-60", "cursor-not-allowed");
+
+    function applyAiDashboardToCards(data) {
+      const summaryText = data.summary_text || "";
+      const riskText = data.risk_text || "";
+      const updatedAt = data.updated_at || null;
+      const totalItems = data.total_items ?? null;
+      const totalCost = data.total_cost ?? null;
+      const lowStockCount = data.low_stock_count ?? null;
+
+      const summaryEl = document.getElementById("aiSummaryText");
+      const riskEl = document.getElementById("aiRiskText");
+      const statsEl = document.getElementById("aiSummaryStats");
+      const upd1 = document.getElementById("aiSummaryUpdated");
+      const upd2 = document.getElementById("aiRiskUpdated");
+      const lowEl = document.getElementById("aiRiskLowStock");
+
+      // set main texts
+      if (summaryEl) {
+        summaryEl.textContent = summaryText || "No AI summary available yet.";
+        summaryEl.classList.remove("animate-pulse", "bg-slate-100", "px-2", "py-1", "rounded-lg");
+      }
+      if (riskEl) {
+        riskEl.textContent = riskText || "No AI risk analysis available yet.";
+        riskEl.classList.remove("animate-pulse", "bg-slate-100", "px-2", "py-1", "rounded-lg");
+      }
+
+      // stats
+      if (statsEl && totalItems !== null && totalCost !== null) {
+        statsEl.textContent = `Items: ${totalItems} • Total cost: ₱${Number(totalCost).toFixed(2)}`;
+      }
+      if (lowEl && lowStockCount !== null) {
+        lowEl.textContent = `Low stock items: ${lowStockCount}`;
+      }
+
+      // timestamps
+      if (updatedAt) {
+        const d = new Date(updatedAt);
+        const nice = isNaN(d.getTime()) ? updatedAt : d.toLocaleString();
+        if (upd1) upd1.textContent = `Last updated: ${nice}`;
+        if (upd2) upd2.textContent = `Last updated: ${nice}`;
+      }
     }
-  }
-}
+
+
+    let aiDashboardLoading = false;
+
+    async function refreshAiDashboard() {
+      if (aiDashboardLoading) return;
+      aiDashboardLoading = true;
+
+      const btnLabel = document.getElementById("aiRefreshLabel");
+      const riskBtn = document.querySelector("#aiRiskCard button");
+      const spinner = document.getElementById("aiRefreshSpinner");
+
+      if (btnLabel) btnLabel.textContent = "Refreshing...";
+      if (spinner) spinner.classList.remove("hidden");
+      if (riskBtn) {
+        riskBtn.disabled = true;
+        riskBtn.classList.add("opacity-60", "cursor-not-allowed");
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/ai/dashboard/refresh`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || "Failed to refresh AI analytics");
+          return;
+        }
+        applyAiDashboardToCards(data);
+      } catch (err) {
+        console.error("AI dashboard refresh error", err);
+        alert("Could not refresh AI analytics");
+      } finally {
+        aiDashboardLoading = false;
+        if (btnLabel) btnLabel.textContent = "Refresh";
+        if (spinner) spinner.classList.add("hidden");
+        if (riskBtn) {
+          riskBtn.disabled = false;
+          riskBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        }
+      }
+    }
 
 
     // Init
-window.onload = function () {
-  const branchSelectEl = document.getElementById('branchSelect');
-  if (branchSelectEl) {
-    branchSelectEl.addEventListener('change', fetchInventory);
-  }
-  const addBranchBtn = document.getElementById('addBranchBtn');
-  if (addBranchBtn) {
-    addBranchBtn.addEventListener('click', addBranchHandler);
-  }
-  showPage('dashboard');
-  loadAiDashboard();
-};
+    window.onload = function () {
+      const branchSelectEl = document.getElementById('branchSelect');
+      if (branchSelectEl) {
+        branchSelectEl.addEventListener('change', fetchInventory);
+      }
+      const addBranchBtn = document.getElementById('addBranchBtn');
+      if (addBranchBtn) {
+        addBranchBtn.addEventListener('click', addBranchHandler);
+      }
+      showPage('dashboard');
+      loadAiDashboard();
+    };
 
-window.onload = function () {
-  // Start on dashboard
-  showPage('dashboard');
-};
+    window.onload = function () {
+      // Start on dashboard
+      showPage('dashboard');
+    };
 
 
 
     // --- ANALYTICS PAGE INITIALIZER ---
-// This runs analytics whenever the dashboard is visible.
-function initDashboardAnalytics() {
-    // Wait for canvases to exist
-    const branchCanvas = document.getElementById("chart-branch-stock");
-    const topCanvas = document.getElementById("chart-top-items");
-    const forecastCanvas = document.getElementById("chart-7day-forecast");
+    // This runs analytics whenever the dashboard is visible.
+    function initDashboardAnalytics() {
+      // Wait for canvases to exist
+      const branchCanvas = document.getElementById("chart-branch-stock");
+      const topCanvas = document.getElementById("chart-top-items");
+      const forecastCanvas = document.getElementById("chart-7day-forecast");
 
-    if (!branchCanvas || !topCanvas || !forecastCanvas) {
+      if (!branchCanvas || !topCanvas || !forecastCanvas) {
         console.warn("Analytics canvases not ready yet, retrying...");
         setTimeout(initDashboardAnalytics, 500);
         return;
-    }
+      }
 
-    // Call your analytics loader (from your backend logic)
-    if (typeof fetchAnalyticsData === "function") {
+      // Call your analytics loader (from your backend logic)
+      if (typeof fetchAnalyticsData === "function") {
         fetchAnalyticsData();
-    } else {
+      } else {
         console.error("fetchAnalyticsData() is missing!");
+      }
     }
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Initialize inventory table
-    initializeInventoryTable();
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initialize inventory table
+      initializeInventoryTable();
 
-    // Initialize analytics/chart
-    initDashboardAnalytics();
+      // Initialize analytics/chart
+      initDashboardAnalytics();
 
-    // Initialize branch stock chart safely
-    const chartCanvas = document.getElementById("branchStockChart");
-    if(chartCanvas){
+      // Initialize branch stock chart safely
+      const chartCanvas = document.getElementById("branchStockChart");
+      if (chartCanvas) {
         const ctx = chartCanvas.getContext("2d");
         const branchStockChart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["Main Branch", "Downtown", "East Side"],
-                datasets: [{
-                    label: "Stock Quantity",
-                    data: [120, 75, 200],
-                    backgroundColor: "rgba(79,70,229,0.7)",
-                    borderColor: "rgba(79,70,229,1)",
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            },
-            options: { responsive: true }
+          type: "bar",
+          data: {
+            labels: ["Main Branch", "Downtown", "East Side"],
+            datasets: [{
+              label: "Stock Quantity",
+              data: [120, 75, 200],
+              backgroundColor: "rgba(79,70,229,0.7)",
+              borderColor: "rgba(79,70,229,1)",
+              borderWidth: 1,
+              borderRadius: 5
+            }]
+          },
+          options: { responsive: true }
         });
-    }
-});
-
-
-
-function openBranchesFromAdmin() {
-  // show branches page
-  showPage('branches');
-  // optional: focus the branch name input if it exists
-  const nameInput = document.getElementById('branchName');
-  if (nameInput) {
-    nameInput.focus();
-  }
-}
-
-
-/* ====== Inventory Analytics Engine (drop-in) ======
-   Assumes your page already defines:
-     - API_URL
-     - BRANCHES_API_URL
-     - API_BASE
-   and that Chart.js <script> is loaded.
-   Paste this at the bottom of your <script> block.
-================================================== */
-
-(function () {
-  // Use existing constants if present; otherwise default paths
-  const INV_API = (typeof API_URL !== 'undefined') ? API_URL : '/api/inventory';
-  const BR_API = (typeof BRANCHES_API_URL !== 'undefined') ? BRANCHES_API_URL : '/api/branches';
-  const AI_API = (typeof API_BASE !== 'undefined') ? (API_BASE + '/api/ai/dashboard') : '/api/ai/dashboard';
-
-  // Chart instances
-  let branchChart = null;
-  let topChart = null;
-  let forecastChart = null;
-
-  // --- Normalize inventory item shape (handles your sample: name, quantity, reorder_level, branch) ---
-  function normalizeItem(it) {
-    return {
-      id: it._id || it.id || null,
-      name: it.item_name || it.name || it.item || 'Unnamed',
-      branch: it.branch || 'No branch',
-      quantity: Number(it.current_stock ?? it.quantity ?? it.qty ?? 0),
-      monthly_usage: Number(it.monthly_usage ?? it.monthlyUsage ?? it.usage ?? 0),
-      price: Number(it.price ?? it.unit_price ?? it.cost ?? 0),
-      reorder_level: Number(it.reorder_level ?? it.reorderLevel ?? 0)
-    };
-  }
-
-  // --- Fetch all data in parallel ---
-  async function fetchAnalyticsData() {
-    try {
-      const [invRes, branchesRes, aiRes] = await Promise.allSettled([
-        fetch(INV_API),
-        fetch(BR_API),
-        fetch(AI_API)
-      ]);
-
-      const invJson = (invRes.status === 'fulfilled' && invRes.value.ok) ? await invRes.value.json() : [];
-      const branchesJson = (branchesRes.status === 'fulfilled' && branchesRes.value.ok) ? await branchesRes.value.json() : [];
-      const aiJson = (aiRes.status === 'fulfilled' && aiRes.value.ok) ? await aiRes.value.json() : null;
-
-      // Inventory may be array or object; ensure array
-      const itemsRaw = Array.isArray(invJson) ? invJson : (invJson.items || []);
-      const items = itemsRaw.map(normalizeItem);
-
-      // Branches array
-      const branches = Array.isArray(branchesJson) ? branchesJson : (branchesJson.branches || []);
-
-      applyAnalytics(items, branches, aiJson);
-    } catch (err) {
-      console.error('fetchAnalyticsData error', err);
-    }
-  }
-
-  // --- Apply analytics to UI ---
-  function applyAnalytics(items, branches, ai) {
-    // KPIs
-    const totalItems = items.length;
-    const totalValue = items.reduce((acc, it) => acc + (Number(it.price || 0) * Number(it.quantity || 0)), 0);
-    const lowItems = items.filter(it => it.quantity <= (it.reorder_level || 0));
-    const branchCount = branches.length || Array.from(new Set(items.map(i => i.branch))).length;
-
-    setText('#kpi-total-items', String(totalItems));
-    setText('#kpi-total-value', `₱${Number(totalValue).toFixed(2)}`);
-    setText('#kpi-low-stock', String(lowItems.length));
-    setText('#kpi-branches', String(branchCount));
-
-    // Branch sums (group by branch)
-    const branchSums = items.reduce((acc, it) => {
-      acc[it.branch] = (acc[it.branch] || 0) + it.quantity;
-      return acc;
-    }, {});
-    const branchLabels = Object.keys(branchSums);
-    const branchValues = branchLabels.map(l => branchSums[l]);
-
-    renderBar('chart-branch-stock', branchLabels, branchValues, chart => { branchChart = chart; });
-
-    // Top items by monthly_usage, fallback to quantity
-    const top = items.slice().sort((a,b) => (b.monthly_usage || b.quantity) - (a.monthly_usage || a.quantity)).slice(0, 6);
-    const topLabels = top.map(i => i.name);
-    const topValues = top.map(i => i.monthly_usage || i.quantity);
-    renderBar('chart-top-items', topLabels, topValues, chart => { topChart = chart; });
-
-    // Forecast: simple aggregate daily estimate (monthly_usage / 30) across items -> sum
-    const aggregatedDaily = items.reduce((s, it) => s + ((it.monthly_usage || 0) / 30), 0);
-    const forecastLabels = [...Array(7)].map((_, i) => {
-      const d = new Date(); d.setDate(d.getDate() + (i+1));
-      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      }
     });
-    // small pattern/noise to make chart readable
-    const forecastValues = forecastLabels.map((_, i) => Number((aggregatedDaily * (1 + ((Math.sin(i + 1) + Math.cos(i + 2)) * 0.05))).toFixed(2)));
 
-    renderLine('chart-7day-forecast', forecastLabels, forecastValues, chart => { forecastChart = chart; });
 
-    // Low stock list
-    const lowListEl = document.querySelector('#low-stock-list');
-    if (lowListEl) {
-      lowListEl.innerHTML = '';
-      if (lowItems.length === 0) {
-        lowListEl.innerHTML = '<li class="text-sm text-slate-500">No low stock items.</li>';
+
+    function openBranchesFromAdmin() {
+      showPage('branches');
+      fetchBranches();
+      const nameInput = document.getElementById('branchName');
+      if (nameInput) nameInput.focus();
+    }
+
+
+
+    /* ====== Inventory Analytics Engine (drop-in) ======
+       Assumes your page already defines:
+         - API_URL
+         - BRANCHES_API_URL
+         - API_BASE
+       and that Chart.js <script> is loaded.
+       Paste this at the bottom of your <script> block.
+    ================================================== */
+
+    (function () {
+      // Use existing constants if present; otherwise default paths
+      const INV_API = (typeof API_URL !== 'undefined') ? API_URL : '/api/inventory';
+      const BR_API = (typeof BRANCHES_API_URL !== 'undefined') ? BRANCHES_API_URL : '/api/branches';
+      const AI_API = (typeof API_BASE !== 'undefined') ? (API_BASE + '/api/ai/dashboard') : '/api/ai/dashboard';
+
+      // Chart instances
+      let branchChart = null;
+      let topChart = null;
+      let forecastChart = null;
+
+      // --- Normalize inventory item shape (handles your sample: name, quantity, reorder_level, branch) ---
+      function normalizeItem(it) {
+        return {
+          id: it._id || it.id || null,
+          name: it.item_name || it.name || it.item || 'Unnamed',
+          branch: it.branch || 'No branch',
+          quantity: Number(it.current_stock ?? it.quantity ?? it.qty ?? 0),
+          monthly_usage: Number(it.monthly_usage ?? it.monthlyUsage ?? it.usage ?? 0),
+          price: Number(it.price ?? it.unit_price ?? it.cost ?? 0),
+          reorder_level: Number(it.reorder_level ?? it.reorderLevel ?? 0)
+        };
+      }
+
+      // --- Fetch all data in parallel ---
+      async function fetchAnalyticsData() {
+        try {
+          const [invRes, branchesRes, aiRes] = await Promise.allSettled([
+            fetch(INV_API),
+            fetch(BR_API),
+            fetch(AI_API)
+          ]);
+
+          const invJson = (invRes.status === 'fulfilled' && invRes.value.ok) ? await invRes.value.json() : [];
+          const branchesJson = (branchesRes.status === 'fulfilled' && branchesRes.value.ok) ? await branchesRes.value.json() : [];
+          const aiJson = (aiRes.status === 'fulfilled' && aiRes.value.ok) ? await aiRes.value.json() : null;
+
+          // Inventory may be array or object; ensure array
+          const itemsRaw = Array.isArray(invJson) ? invJson : (invJson.items || []);
+          const items = itemsRaw.map(normalizeItem);
+
+          // Branches array
+          const branches = Array.isArray(branchesJson) ? branchesJson : (branchesJson.branches || []);
+
+          applyAnalytics(items, branches, aiJson);
+        } catch (err) {
+          console.error('fetchAnalyticsData error', err);
+        }
+      }
+
+      // --- Apply analytics to UI ---
+      function applyAnalytics(items, branches, ai) {
+        // KPIs
+        const totalItems = items.length;
+        const totalValue = items.reduce((acc, it) => acc + (Number(it.price || 0) * Number(it.quantity || 0)), 0);
+        const lowItems = items.filter(it => it.quantity <= (it.reorder_level || 0));
+        const branchCount = branches.length || Array.from(new Set(items.map(i => i.branch))).length;
+
+        setText('#kpi-total-items', String(totalItems));
+        setText('#kpi-total-value', `₱${Number(totalValue).toFixed(2)}`);
+        setText('#kpi-low-stock', String(lowItems.length));
+        setText('#kpi-branches', String(branchCount));
+
+        // Branch sums (group by branch)
+        const branchSums = items.reduce((acc, it) => {
+          acc[it.branch] = (acc[it.branch] || 0) + it.quantity;
+          return acc;
+        }, {});
+        const branchLabels = Object.keys(branchSums);
+        const branchValues = branchLabels.map(l => branchSums[l]);
+
+        renderBar('chart-branch-stock', branchLabels, branchValues, chart => { branchChart = chart; });
+
+        // Top items by monthly_usage, fallback to quantity
+        const top = items.slice().sort((a, b) => (b.monthly_usage || b.quantity) - (a.monthly_usage || a.quantity)).slice(0, 6);
+        const topLabels = top.map(i => i.name);
+        const topValues = top.map(i => i.monthly_usage || i.quantity);
+        renderBar('chart-top-items', topLabels, topValues, chart => { topChart = chart; });
+
+        // Forecast: simple aggregate daily estimate (monthly_usage / 30) across items -> sum
+        const aggregatedDaily = items.reduce((s, it) => s + ((it.monthly_usage || 0) / 30), 0);
+        const forecastLabels = [...Array(7)].map((_, i) => {
+          const d = new Date(); d.setDate(d.getDate() + (i + 1));
+          return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        });
+        // small pattern/noise to make chart readable
+        const forecastValues = forecastLabels.map((_, i) => Number((aggregatedDaily * (1 + ((Math.sin(i + 1) + Math.cos(i + 2)) * 0.05))).toFixed(2)));
+
+        renderLine('chart-7day-forecast', forecastLabels, forecastValues, chart => { forecastChart = chart; });
+
+        // Low stock list
+        const lowListEl = document.querySelector('#low-stock-list');
+        if (lowListEl) {
+          lowListEl.innerHTML = '';
+          if (lowItems.length === 0) {
+            lowListEl.innerHTML = '<li class="text-sm text-slate-500">No low stock items.</li>';
+          } else {
+            lowItems.forEach(it => {
+              const li = document.createElement('li');
+              li.className = 'rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 px-3 py-2 flex justify-between gap-2 text-xs';
+              li.innerHTML = `<div><div class="font-semibold text-slate-800 text-sm">${escapeHtml(it.name)}</div><div class="text-[12px] text-slate-500">${escapeHtml(it.branch)} • Reorder at ${it.reorder_level}</div></div><div class="text-sm font-semibold ${it.quantity <= it.reorder_level ? 'text-rose-600' : 'text-slate-700'}">${it.quantity}</div>`;
+              lowListEl.appendChild(li);
+            });
+          }
+        }
+
+        // AI summary
+        const aiSummaryEl = document.querySelector('#aiSummaryTextUnified') || document.querySelector('#ai-analytics-summary') || document.querySelector('#aiSummaryText');
+        if (aiSummaryEl) {
+          const parts = [];
+          if (ai && ai.summary_text) parts.push(ai.summary_text);
+          if (ai && ai.risk_text) parts.push('Risk: ' + ai.risk_text);
+          aiSummaryEl.textContent = parts.join('\n\n') || 'No AI summary available.';
+        }
+        // AI stats
+        if (ai) {
+          if (document.querySelector('#aiSummaryStatsUnified')) {
+            document.querySelector('#aiSummaryStatsUnified').textContent = (ai.total_items !== undefined ? `Items: ${ai.total_items}` : '') + (ai.total_cost !== undefined ? ` • Total cost: ₱${Number(ai.total_cost).toFixed(2)}` : '');
+          }
+          if (document.querySelector('#aiSummaryUpdatedUnified')) {
+            const d = ai.updated_at ? new Date(ai.updated_at) : null;
+            document.querySelector('#aiSummaryUpdatedUnified').textContent = d && !isNaN(d.getTime()) ? `Last updated: ${d.toLocaleString()}` : (ai.updated_at || '');
+          }
+        }
+      }
+
+      // --- small helper to set text safely ---
+      function setText(selector, txt) {
+        const el = document.querySelector(selector);
+        if (el) el.textContent = txt;
+      }
+
+      // --- render bar chart (Chart.js) ---
+      function renderBar(canvasId, labels, values, cb) {
+        const el = document.getElementById(canvasId);
+        if (!el) { console.warn('Canvas not found:', canvasId); return; }
+        if (el.chartInstance) { try { el.chartInstance.destroy(); } catch (e) { } }
+        const ctx = el.getContext('2d');
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: '',
+              data: values,
+              backgroundColor: 'rgba(59,130,246,0.72)',
+              borderColor: 'rgba(59,130,246,1)',
+              borderWidth: 1.5,
+              borderRadius: 6,
+              barPercentage: 0.65,
+              categoryPercentage: 0.75
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { maxRotation: 0, autoSkip: false } },
+              y: { beginAtZero: true }
+            }
+          }
+        });
+        el.chartInstance = chart;
+        if (typeof cb === 'function') cb(chart);
+      }
+
+      // --- render line chart (Chart.js) ---
+      function renderLine(canvasId, labels, values, cb) {
+        const el = document.getElementById(canvasId);
+        if (!el) { console.warn('Canvas not found:', canvasId); return; }
+        if (el.chartInstance) { try { el.chartInstance.destroy(); } catch (e) { } }
+        const ctx = el.getContext('2d');
+        const chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: '',
+              data: values,
+              fill: true,
+              backgroundColor: 'rgba(59,130,246,0.18)',
+              borderColor: 'rgba(59,130,246,1)',
+              borderWidth: 2,
+              tension: 0.35,
+              pointRadius: 3,
+              pointHoverRadius: 6,
+              pointBackgroundColor: 'rgba(59,130,246,1)'
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { maxRotation: 0 } },
+              y: { beginAtZero: true }
+            }
+          }
+        });
+        el.chartInstance = chart;
+        if (typeof cb === 'function') cb(chart);
+      }
+
+      // --- utility: escape HTML for safety in insertion ---
+      function escapeHtml(str) {
+        if (typeof str !== 'string') return str;
+        return str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+      }
+
+      // --- initializer: wait for canvases and then run fetchAnalyticsData ---
+      function initDashboardAnalytics(retries = 0) {
+        const branchCanvas = document.getElementById('chart-branch-stock');
+        const topCanvas = document.getElementById('chart-top-items');
+        const forecastCanvas = document.getElementById('chart-7day-forecast');
+
+        if (!branchCanvas || !topCanvas || !forecastCanvas) {
+          if (retries < 8) {
+            // try again shortly (give DOM time to render)
+            setTimeout(() => initDashboardAnalytics(retries + 1), 300);
+          } else {
+            console.warn('Analytics canvases not found after retries.');
+          }
+          return;
+        }
+
+        // Good — canvases exist. Load data once and then every 90s while dashboard is open
+        fetchAnalyticsData();
+        if (window._analyticsInterval) clearInterval(window._analyticsInterval);
+        window._analyticsInterval = setInterval(fetchAnalyticsData, 90000);
+      }
+
+      // Run on DOM ready
+      document.addEventListener('DOMContentLoaded', () => {
+        // initializeInventoryTable();  // REMOVE or comment this out
+        initDashboardAnalytics();
+      });
+
+
+      // Ensure analytics also runs when your showPage('dashboard') is executed
+      // If you already have a global showPage function, wrap it; otherwise create one.
+      if (typeof window.showPage === 'function') {
+        const origShow = window.showPage;
+        window.showPage = function (page) {
+          const res = origShow.apply(this, arguments);
+          if (page === 'dashboard') {
+            // slight delay to allow DOM updates
+            setTimeout(() => initDashboardAnalytics(), 200);
+          }
+          return res;
+        };
       } else {
-        lowItems.forEach(it => {
+        // define a minimal showPage if missing (non-destructive)
+        window.showPage = function (page) {
+          document.querySelectorAll("section[id$='-section']").forEach(s => s.classList.add('hidden'));
+          const el = document.getElementById(page + '-section');
+          if (el) el.classList.remove('hidden');
+          if (page === 'dashboard') {
+            setTimeout(() => initDashboardAnalytics(), 200);
+          }
+        };
+      }
+
+      // Expose for debugging
+      window.fetchAnalyticsData = fetchAnalyticsData;
+      window._renderBar = renderBar;
+      window._renderLine = renderLine;
+    })();
+
+    function initializeInventoryTable() { }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.nav-dropdown').forEach(dd => {
+        dd.classList.add('invisible', 'opacity-0');
+        dd.classList.remove('opacity-100');
+      });
+    }
+
+
+    async function fetchSuppliers() {
+      try {
+        const res = await fetch(SUPPLIERS_API_URL);
+        const suppliers = await res.json();
+
+        const body = document.getElementById('purchaseRequestsBody'); // or another list/table
+        if (!body) return;
+
+        // TODO: replace placeholder content with rendered suppliers
+        console.log('Suppliers:', suppliers);
+      } catch (err) {
+        console.error('Error fetching suppliers', err);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('addSupplierBtn');
+      if (btn) {
+        btn.addEventListener('click', saveSupplier);
+      } else {
+        console.warn('addSupplierBtn not found in DOM');
+      }
+    });
+
+    async function saveSupplier() {
+      try {
+        const nameEl = document.getElementById('supplierName');
+        const contactEl = document.getElementById('supplierContact');
+        const leadEl = document.getElementById('supplierLeadTime');
+
+        const name = nameEl?.value.trim() || '';
+        const contact = contactEl?.value.trim() || '';
+        const leadTimeStr = leadEl?.value.trim() || '';
+        const lead_time_days = leadTimeStr ? parseInt(leadTimeStr, 10) : 0;
+
+        if (!name) {
+          alert('Supplier name is required');
+          return;
+        }
+
+        const res = await fetch(SUPPLIERS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, contact, lead_time_days }),
+        });
+        const data = await res.json();
+        console.log('Add supplier response:', res.status, data);
+
+        if (!res.ok) {
+          alert(data.error || 'Failed to add supplier');
+          return;
+        }
+
+        // clear inputs
+        if (nameEl) nameEl.value = '';
+        if (contactEl) contactEl.value = '';
+        if (leadEl) leadEl.value = '';
+
+        // reload list
+        await fetchSuppliers();
+      } catch (err) {
+        console.error('Error in saveSupplier:', err);
+        alert('Error adding supplier (check console)');
+      }
+    }
+
+    async function fetchSuppliers() {
+      try {
+        const res = await fetch(SUPPLIERS_API_URL);
+        const suppliers = await res.json();
+
+        const list = document.getElementById('suppliersList');
+        if (!list) return;
+
+        list.innerHTML = '';
+        if (!suppliers.length) {
+          list.innerHTML = '<li class="text-slate-400 text-[11px]">No suppliers yet.</li>';
+          return;
+        }
+
+        suppliers.forEach(s => {
           const li = document.createElement('li');
-          li.className = 'rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 px-3 py-2 flex justify-between gap-2 text-xs';
-          li.innerHTML = `<div><div class="font-semibold text-slate-800 text-sm">${escapeHtml(it.name)}</div><div class="text-[12px] text-slate-500">${escapeHtml(it.branch)} • Reorder at ${it.reorder_level}</div></div><div class="text-sm font-semibold ${it.quantity<=it.reorder_level? 'text-rose-600':'text-slate-700'}">${it.quantity}</div>`;
-          lowListEl.appendChild(li);  
+          li.className =
+            'rounded-xl bg-white/20 backdrop-blur-sm border border-white/20 px-3 py-2 flex justify-between';
+          li.innerHTML = `
+        <span>
+          <span class="font-semibold">${s.name}</span>
+          <span class="text-[11px] text-slate-500 block">
+            ${s.contact || 'No contact'} · Lead time: ${s.lead_time_days ?? 0} days
+          </span>
+        </span>
+      `;
+          list.appendChild(li);
         });
+      } catch (err) {
+        console.error('Error fetching suppliers', err);
       }
     }
 
-    // AI summary
-    const aiSummaryEl = document.querySelector('#aiSummaryTextUnified') || document.querySelector('#ai-analytics-summary') || document.querySelector('#aiSummaryText');
-    if (aiSummaryEl) {
-      const parts = [];
-      if (ai && ai.summary_text) parts.push(ai.summary_text);
-      if (ai && ai.risk_text) parts.push('Risk: ' + ai.risk_text);
-      aiSummaryEl.textContent = parts.join('\n\n') || 'No AI summary available.';
-    }
-    // AI stats
-    if (ai) {
-      if (document.querySelector('#aiSummaryStatsUnified')) {
-        document.querySelector('#aiSummaryStatsUnified').textContent = (ai.total_items !== undefined ? `Items: ${ai.total_items}` : '') + (ai.total_cost !== undefined ? ` • Total cost: ₱${Number(ai.total_cost).toFixed(2)}` : '');
-      }
-      if (document.querySelector('#aiSummaryUpdatedUnified')) {
-        const d = ai.updated_at ? new Date(ai.updated_at) : null;
-        document.querySelector('#aiSummaryUpdatedUnified').textContent = d && !isNaN(d.getTime()) ? `Last updated: ${d.toLocaleString()}` : (ai.updated_at || '');
-      }
-    }
-  }
 
-  // --- small helper to set text safely ---
-  function setText(selector, txt) {
-    const el = document.querySelector(selector);
-    if (el) el.textContent = txt;
-  }
 
-  // --- render bar chart (Chart.js) ---
-  function renderBar(canvasId, labels, values, cb) {
-    const el = document.getElementById(canvasId);
-    if (!el) { console.warn('Canvas not found:', canvasId); return; }
-    if (el.chartInstance) { try { el.chartInstance.destroy(); } catch (e) {} }
-    const ctx = el.getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: '',
-          data: values,
-          backgroundColor: 'rgba(59,130,246,0.72)',
-          borderColor: 'rgba(59,130,246,1)',
-          borderWidth: 1.5,
-          borderRadius: 6,
-          barPercentage: 0.65,
-          categoryPercentage: 0.75
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { maxRotation: 0, autoSkip: false } },
-          y: { beginAtZero: true }
-        }
-      }
-    });
-    el.chartInstance = chart;
-    if (typeof cb === 'function') cb(chart);
-  }
+    // Batch successfully added!
 
-  // --- render line chart (Chart.js) ---
-  function renderLine(canvasId, labels, values, cb) {
-    const el = document.getElementById(canvasId);
-    if (!el) { console.warn('Canvas not found:', canvasId); return; }
-    if (el.chartInstance) { try { el.chartInstance.destroy(); } catch (e) {} }
-    const ctx = el.getContext('2d');
-    const chart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: '',
-          data: values,
-          fill: true,
-          backgroundColor: 'rgba(59,130,246,0.18)',
-          borderColor: 'rgba(59,130,246,1)',
-          borderWidth: 2,
-          tension: 0.35,
-          pointRadius: 3,
-          pointHoverRadius: 6,
-          pointBackgroundColor: 'rgba(59,130,246,1)'
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { maxRotation: 0 } },
-          y: { beginAtZero: true }
-        }
-      }
-    });
-    el.chartInstance = chart;
-    if (typeof cb === 'function') cb(chart);
-  }
-
-  // --- utility: escape HTML for safety in insertion ---
-  function escapeHtml(str) {
-    if (typeof str !== 'string') return str;
-    return str.replace(/[&<>"']/g, (m) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
-  }
-
-  // --- initializer: wait for canvases and then run fetchAnalyticsData ---
-  function initDashboardAnalytics(retries = 0) {
-    const branchCanvas = document.getElementById('chart-branch-stock');
-    const topCanvas = document.getElementById('chart-top-items');
-    const forecastCanvas = document.getElementById('chart-7day-forecast');
-
-    if (!branchCanvas || !topCanvas || !forecastCanvas) {
-      if (retries < 8) {
-        // try again shortly (give DOM time to render)
-        setTimeout(() => initDashboardAnalytics(retries + 1), 300);
-      } else {
-        console.warn('Analytics canvases not found after retries.');
-      }
-      return;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2500);
     }
 
-    // Good — canvases exist. Load data once and then every 90s while dashboard is open
-    fetchAnalyticsData();
-    if (window._analyticsInterval) clearInterval(window._analyticsInterval);
-    window._analyticsInterval = setInterval(fetchAnalyticsData, 90000);
-  }
+    function openItemDetails(item) {
+      const o = document.getElementById('itemDetailsOverlay');
+      if (!o) return;
 
-  // Run on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  // initializeInventoryTable();  // REMOVE or comment this out
-  initDashboardAnalytics();
-});
+      document.getElementById('detail_name').textContent = item.name || '';
+      document.getElementById('detail_branch').textContent = item.branch || '';
+      document.getElementById('detail_quantity').textContent = item.quantity ?? 0;
+      document.getElementById('detail_reorder').textContent = item.reorder_level ?? 0;
+      document.getElementById('detail_price').textContent = item.price ?? 0;
+      document.getElementById('detail_sku').textContent = item.sku || '';
+      document.getElementById('detail_batch').textContent = item.batch_number || '';
+      document.getElementById('detail_lot').textContent = item.lot_number || '';
+      document.getElementById('detail_mfg').textContent = item.mfg_date || '';
+      document.getElementById('detail_exp').textContent = item.exp_date || '';
+      document.getElementById('detail_supplier_batch').textContent = item.supplier_batch || '';
+      document.getElementById('detail_qr').textContent = item.qr_code_id || '';
 
+      o.classList.remove('hidden');
+    }
 
-  // Ensure analytics also runs when your showPage('dashboard') is executed
-  // If you already have a global showPage function, wrap it; otherwise create one.
-  if (typeof window.showPage === 'function') {
-    const origShow = window.showPage;
-    window.showPage = function (page) {
-      const res = origShow.apply(this, arguments);
-      if (page === 'dashboard') {
-        // slight delay to allow DOM updates
-        setTimeout(() => initDashboardAnalytics(), 200);
-      }
-      return res;
-    };
-  } else {
-    // define a minimal showPage if missing (non-destructive)
-    window.showPage = function (page) {
-      document.querySelectorAll("section[id$='-section']").forEach(s => s.classList.add('hidden'));
-      const el = document.getElementById(page + '-section');
-      if (el) el.classList.remove('hidden');
-      if (page === 'dashboard') {
-        setTimeout(() => initDashboardAnalytics(), 200);
-      }
-    };
-  }
+    function closeItemDetails() {
+      const o = document.getElementById('itemDetailsOverlay');
+      if (o) o.classList.add('hidden');
+    }
 
-  // Expose for debugging
-  window.fetchAnalyticsData = fetchAnalyticsData;
-  window._renderBar = renderBar;
-  window._renderLine = renderLine;
-})();
-
-function initializeInventoryTable() {}
-
-function closeAllDropdowns() {
-  document.querySelectorAll('.nav-dropdown').forEach(dd => {
-    dd.classList.add('invisible', 'opacity-0');
-    dd.classList.remove('opacity-100');
-  });
-}
-
-//Suppliers//
-
-function openPurchaseRequestOverlay() {
-  alert('New purchase request overlay coming soon.');
-}
-
-// Batch successfully added!
-
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.remove('hidden');
-  setTimeout(() => toast.classList.add('hidden'), 2500);
-}
-
-function openItemDetails(item) {
-  const o = document.getElementById('itemDetailsOverlay');
-  if (!o) return;
-
-  document.getElementById('detail_name').textContent = item.name || '';
-  document.getElementById('detail_branch').textContent = item.branch || '';
-  document.getElementById('detail_quantity').textContent = item.quantity ?? 0;
-  document.getElementById('detail_reorder').textContent = item.reorder_level ?? 0;
-  document.getElementById('detail_price').textContent = item.price ?? 0;
-  document.getElementById('detail_sku').textContent = item.sku || '';
-  document.getElementById('detail_batch').textContent = item.batch_number || '';
-  document.getElementById('detail_lot').textContent = item.lot_number || '';
-  document.getElementById('detail_mfg').textContent = item.mfg_date || '';
-  document.getElementById('detail_exp').textContent = item.exp_date || '';
-  document.getElementById('detail_supplier_batch').textContent = item.supplier_batch || '';
-  document.getElementById('detail_qr').textContent = item.qr_code_id || '';
-
-  o.classList.remove('hidden');
-}
-
-function closeItemDetails() {
-  const o = document.getElementById('itemDetailsOverlay');
-  if (o) o.classList.add('hidden');
-}
 
 
   </script>
 </body>
+
 </html>

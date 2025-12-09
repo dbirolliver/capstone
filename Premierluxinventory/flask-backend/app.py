@@ -1,19 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
-from bson import ObjectId
 import os
 import google.generativeai as genai
-from datetime import datetime
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-from datetime import datetime, timezone 
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
+from flask_socketio import SocketIO
+import threading
+import time
 
 # ---------- Flask + CORS ----------
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # ---------- Gemini setup ----------
 
@@ -36,7 +37,6 @@ branches_collection = db["branches"]
 batches_collection = db["batches"]
 consumption_collection = db["consumption"]
 suppliers_collection = db["suppliers"]
-
 
 # ---------- Root ----------
 
@@ -80,13 +80,12 @@ def get_low_stock():
 @app.route("/api/inventory/<name>/adjust", methods=["POST"])
 def adjust_inventory(name):
     data = request.json or {}
-    branch = data.get("branch")          # may be None / empty
+    branch = data.get("branch")
     delta = int(data.get("delta", 0))
 
     if delta == 0:
         return jsonify({"error": "non-zero delta required"}), 400
 
-    # Build query: by name, and branch only if provided
     query = {"name": name}
     if branch:
         query["branch"] = branch
@@ -98,11 +97,19 @@ def adjust_inventory(name):
     new_qty = max(0, int(inv.get("quantity", 0)) + delta)
     inventory_collection.update_one(
         {"_id": inv["_id"]},
-        {"$set": {"quantity": new_qty}}
+        {"$set": {"quantity": new_qty}},
     )
 
-    return jsonify({"status": "ok", "quantity": new_qty})
+    # log this change as a movement event for analytics
+    consumption_collection.insert_one({
+        "name": name,
+        "date": datetime.utcnow(),
+        "quantity_used": abs(delta),
+        "direction": "out" if delta < 0 else "in",
+        "branch": branch or inv.get("branch"),
+    })
 
+    return jsonify({"status": "ok", "quantity": new_qty})
 
 # ---------- BATCHES ----------
 
@@ -129,11 +136,10 @@ def create_batch():
         "qr_code_id": data.get("qr_code_id") or None,
     }
 
-    # insert batch
     result = batches_collection.insert_one(batch_doc)
     batch_doc["_id"] = str(result.inserted_id)
 
-    # also update inventory totals for this item + branch
+    # update inventory totals for this item + branch
     inventory_collection.update_one(
         {"name": batch_doc["item_name"], "branch": batch_doc["branch"]},
         {
@@ -194,8 +200,8 @@ def forecast_item(item_name):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-    from datetime import datetime, timezone
+
+# ---------- AI DASHBOARD ----------
 
 @app.route("/api/ai/dashboard", methods=["GET"])
 def get_ai_dashboard():
@@ -205,19 +211,16 @@ def get_ai_dashboard():
     return jsonify({
         "summary_text": doc.get("summary_text", ""),
         "risk_text": doc.get("risk_text", ""),
-        "updated_at": doc.get("updated_at")  # ISO string or None
+        "updated_at": doc.get("updated_at"),
     }), 200
-
 
 @app.route("/api/ai/dashboard/refresh", methods=["POST"])
 def refresh_ai_dashboard():
-    # 1) Gather simple stats from inventory
     items = list(inventory_collection.find({}, {"_id": 0}))
     total_items = len(items)
     total_cost = float(sum((i.get("price", 0) or 0) * (i.get("quantity", 0) or 0) for i in items))
     low_stock = [i for i in items if i.get("quantity", 0) <= i.get("reorder_level", 0)]
 
-    # 2) Build a compact text summary for Gemini
     inventory_brief = {
         "total_items": total_items,
         "total_cost": total_cost,
@@ -225,7 +228,6 @@ def refresh_ai_dashboard():
         "low_stock_names": [i.get("name") for i in low_stock][:10],
     }
 
-    # Simple rule-based AI-style texts (no external API)
     if total_items == 0:
         summary_text = (
             "No items in inventory yet. Add your first batch to start tracking stock and cost."
@@ -243,7 +245,6 @@ def refresh_ai_dashboard():
             f"Focus on low stock items ({low_names_str}). "
             "Plan purchase orders in the next 7 days to avoid stockouts and spread costs."
         )
-
 
     now_iso = datetime.now(timezone.utc).isoformat()
 
@@ -271,9 +272,7 @@ def refresh_ai_dashboard():
         "low_stock_count": len(low_stock),
     }), 200
 
-
-
-# ---------- DEMO GEMINI CHAT ENDPOINT ----------
+# ---------- CHAT ----------
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
@@ -342,13 +341,10 @@ def add_branch():
     branches_collection.insert_one(doc)
     return jsonify({"message": "Branch added"}), 201
 
-# ---------- KPI ENDPOINTS (Dashboard cards) ----------
+# ---------- KPI ENDPOINTS ----------
 
 @app.route("/api/low-stock-count", methods=["GET"])
 def api_low_stock_count():
-    """
-    Count items where quantity <= reorder_level.
-    """
     try:
         count = inventory_collection.count_documents({
             "$expr": {"$lte": ["$quantity", "$reorder_level"]}
@@ -357,12 +353,8 @@ def api_low_stock_count():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route("/api/total-inventory", methods=["GET"])
 def api_total_inventory():
-    """
-    Return the total inventory value = sum(price * quantity) over all items.
-    """
     try:
         cursor = inventory_collection.find({}, {"price": 1, "quantity": 1})
         total_value = 0.0
@@ -370,42 +362,19 @@ def api_total_inventory():
             price = float(doc.get("price") or 0)
             qty = float(doc.get("quantity") or 0)
             total_value += price * qty
-
         return jsonify({"value": total_value}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route("/api/branches-count", methods=["GET"])
 def api_branches_count():
-    """
-    Count all branches.
-    """
     try:
         count = branches_collection.count_documents({})
         return jsonify({"count": int(count)}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-def expiry_within_days(expiry_value, days):
-    """Return True if expiry_value is within <days> days from now."""
-    if not expiry_value:
-        return False
-
-    # If expiry is already a datetime
-    if isinstance(expiry_value, datetime):
-        expiry_dt = expiry_value
-    else:
-        # If you stored it as ISO string like "2025-12-31"
-        try:
-            expiry_dt = datetime.fromisoformat(str(expiry_value))
-        except ValueError:
-            return False
-
-    return expiry_dt <= datetime.utcnow() + timedelta(days=days)
-
-
-
-suppliers_collection = db["suppliers"]
+# ---------- SUPPLIERS ----------
 
 @app.route("/api/suppliers", methods=["GET"])
 def get_suppliers():
@@ -423,14 +392,13 @@ def add_supplier():
         "contact": data.get("contact", ""),
         "lead_time_days": data.get("lead_time_days", 0),
     }
-    suppliers_collection.insert_one(doc)  # auto-creates collection if missing [web:100][web:111]
+    suppliers_collection.insert_one(doc)
     return jsonify({"message": "Supplier added"}), 201
 
-
+# ---------- ALERTS ----------
 
 @app.post("/api/alerts/<alert_id>/acknowledge")
 def acknowledge_alert(alert_id):
-    # TODO: replace with your real auth/current user
     user_id = request.headers.get("X-User-Id", "demo-admin")
     user_name = request.headers.get("X-User-Name", "Demo Admin")
 
@@ -451,17 +419,15 @@ def get_alerts():
     alerts = []
     low_by_branch = {}
 
-    # 1) Build alerts from inventory
-    items = list(inventory_collection.find({}))  # adjust to your collection name
+    items = list(inventory_collection.find({}))
 
     for item in items:
         name = item.get("name")
         branch = item.get("branch", "Main branch")
         qty = item.get("quantity", 0)
         reorder = item.get("reorder_level", 0)
-        expiry = item.get("expiry_date")  # whatever field you use
+        expiry = item.get("expiry_date")
 
-        # Low stock
         if reorder and qty <= reorder:
             alerts.append({
                 "id": f"low-stock-{branch}-{name}",
@@ -473,7 +439,6 @@ def get_alerts():
             })
             low_by_branch[branch] = low_by_branch.get(branch, 0) + 1
 
-        # Expiring soon
         if expiry and expiry_within_days(expiry, 30):
             alerts.append({
                 "id": f"expiry-{branch}-{name}",
@@ -484,9 +449,8 @@ def get_alerts():
                 "branch": branch,
             })
 
-    # Branch-level low-stock summary
     for branch, count in low_by_branch.items():
-        if count >= 3:  # threshold
+        if count >= 3:
             alerts.append({
                 "id": f"branch-low-{branch}",
                 "type": "branch_low_stock",
@@ -496,22 +460,33 @@ def get_alerts():
                 "branch": branch,
             })
 
-    # 2) Filter out alerts already acknowledged by this user
     acked_ids = {
         doc["alert_id"]
         for doc in db.alert_acknowledgements.find(
-            {"user_id": user_id},
-            {"alert_id": 1, "_id": 0}
+            {"user_id": user_id}, {"alert_id": 1, "_id": 0}
         )
     }
 
     visible_alerts = [a for a in alerts if a["id"] not in acked_ids]
     return jsonify(visible_alerts)
 
+def expiry_within_days(expiry_value, days):
+    if not expiry_value:
+        return False
+    if isinstance(expiry_value, datetime):
+        expiry_dt = expiry_value
+    else:
+        try:
+            expiry_dt = datetime.fromisoformat(str(expiry_value))
+        except ValueError:
+            return False
+    return expiry_dt <= datetime.utcnow() + timedelta(days=days)
+
+# ---------- REPLENISHMENT ----------
 
 @app.get("/api/replenishment/recommendations")
 def get_replenishment_recommendations():
-    items = list(inventory_collection.find({}))  # your inventory collection
+    items = list(inventory_collection.find({}))
 
     recommendations = []
 
@@ -521,18 +496,14 @@ def get_replenishment_recommendations():
         qty = item.get("quantity", 0)
         reorder = item.get("reorder_level", 0)
 
-        # optional extra fields
-        avg_daily_usage = item.get("avg_daily_usage", 1)      # fallback 1
-        lead_time_days = item.get("lead_time_days", 7)        # fallback 7
+        avg_daily_usage = item.get("avg_daily_usage", 1)
+        lead_time_days = item.get("lead_time_days", 7)
         safety_stock = item.get("safety_stock", reorder or 0)
 
-        # basic reorder point formula
         reorder_point = avg_daily_usage * lead_time_days + safety_stock
 
-        # trigger recommendation if at/below either configured reorder or ROP
         trigger_level = max(reorder, reorder_point)
         if qty <= trigger_level:
-            # target stock for next period
             target_stock = avg_daily_usage * (lead_time_days + 7) + safety_stock
             suggested_qty = max(int(target_stock - qty), 0)
 
@@ -543,13 +514,257 @@ def get_replenishment_recommendations():
                     "current_quantity": qty,
                     "reorder_level": reorder,
                     "reorder_point": reorder_point,
-                    "suggested_order_qty": suggested_qty
+                    "suggested_order_qty": suggested_qty,
                 })
 
     return jsonify(recommendations)
+
+# ---------- ANALYTICS REST ENDPOINTS ----------
+
+@app.get("/analytics/overview")
+def analytics_overview():
+    new_items = inventory_collection.count_documents({
+        "created_at": {"$gte": datetime.now() - timedelta(days=7)}
+    })
+
+    batches_7d = batches_collection.count_documents({
+        "mfg_date": {"$gte": datetime.now() - timedelta(days=7)}
+    })
+
+    total_items = inventory_collection.count_documents({})
+    branches = branches_collection.count_documents({})
+
+    return jsonify({
+        "new_items": new_items,
+        "batches_7d": batches_7d,
+        "total_items": total_items,
+        "branches": branches,
+    })
+
+@app.get("/analytics/movement")
+def analytics_movement():
+    today = datetime.now()
+    start_date = today - timedelta(days=6)
+
+    labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    stock_in = [0] * 7
+    stock_out = [0] * 7
+    low_stock = [0] * 7
+
+    batches = list(batches_collection.find({}))
+    for b in batches:
+        mfg = b.get("mfg_date")
+        if not mfg:
+            continue
+        if isinstance(mfg, str):
+            mfg = datetime.fromisoformat(mfg)
+        if mfg < start_date:
+            continue
+        day = mfg.weekday()
+        stock_in[day] += b.get("current_stock", 0)
+
+    usage = list(consumption_collection.find({}))
+    for u in usage:
+        used_date = u.get("date")
+        if not used_date:
+            continue
+        if isinstance(used_date, str):
+            used_date = datetime.fromisoformat(used_date)
+        if used_date < start_date:
+            continue
+        day = used_date.weekday()
+        qty = u.get("quantity_used", 0)
+        if u.get("direction") == "in":
+            stock_in[day] += qty
+        else:
+            stock_out[day] += qty
+
+    low_stock_count = inventory_collection.count_documents({
+        "$expr": {"$lte": ["$quantity", "$reorder_level"]}
+    })
+    low_stock = [low_stock_count] * 7
+
+    return jsonify({
+        "labels": labels,
+        "stock_in": stock_in,
+        "stock_out": stock_out,
+        "low_stock": low_stock,
+    })
+
+@app.get("/analytics/category")
+def analytics_category():
+    return jsonify(list(inventory_collection.aggregate([
+        {"$match": {"category": {"$ne": None}}},
+        {"$group": {"_id": "$category", "total": {"$sum": "$quantity"}}},
+    ])))
+
+@app.get("/analytics/low-stock")
+def analytics_low_stock():
+    return jsonify(list(inventory_collection.find(
+        {"$expr": {"$lte": ["$quantity", "$reorder_level"]}},
+        {"_id": 0, "name": 1, "quantity": 1},
+    )))
+
+@app.get("/analytics/top-products")
+def analytics_top_products():
+    return jsonify(list(consumption_collection.aggregate([
+        {"$group": {"_id": "$name", "used": {"$sum": "$quantity_used"}}},
+        {"$sort": {"used": -1}},
+        {"$limit": 5},
+    ])))
+
+@app.route("/api/analytics/branch-stock", methods=["GET"])
+def analytics_branch_stock():
+    pipeline = [
+        {"$group": {
+            "_id": "$branch",
+            "total_qty": {"$sum": "$quantity"},
+        }},
+        {"$sort": {"_id": 1}},
+    ]
+    results = list(inventory_collection.aggregate(pipeline))
+    labels = [r["_id"] or "Unassigned" for r in results]
+    values = [r["total_qty"] for r in results]
+    return jsonify({"labels": labels, "values": values}), 200
+
+# ---------- SOCKET ANALYTICS BROADCASTER ----------
+
+def build_analytics_payload():
+    # ---------- Overview ----------
+    new_items = inventory_collection.count_documents({
+        "created_at": {"$gte": datetime.now() - timedelta(days=7)}
+    })
+    batches_7d = batches_collection.count_documents({
+        "mfg_date": {"$gte": datetime.now() - timedelta(days=7)}
+    })
+    total_items = inventory_collection.count_documents({})
+    branches = branches_collection.count_documents({})
+
+    overview = {
+        "new_items": new_items,
+        "batches_7d": batches_7d,
+        "total_items": total_items,
+        "branches": branches,
+    }
+
+    # ---------- WEEKLY movement (for small bar chart) ----------
+    today = datetime.now()
+    start_week = today - timedelta(days=6)
+    week_labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    week_in = [0] * 7
+    week_out = [0] * 7
+
+    # stock in from batches (last 7 days)
+    batches = list(batches_collection.find({"mfg_date": {"$gte": start_week}}))
+    for b in batches:
+        d = b.get("mfg_date")
+        if isinstance(d, str):
+            d = datetime.fromisoformat(d)
+        if d < start_week:
+            continue
+        day = d.weekday()  # 0=Mon..6=Sun
+        week_in[day] += b.get("current_stock", b.get("quantity", 0) or 0)
+
+    # stock in/out from consumption (last 7 days)
+    usage = list(consumption_collection.find({"date": {"$gte": start_week}}))
+    for u in usage:
+        d = u.get("date")
+        if isinstance(d, str):
+            d = datetime.fromisoformat(d)
+        if d < start_week:
+            continue
+        day = d.weekday()
+        qty = u.get("quantity_used", 1)
+        if u.get("direction") == "in":
+            week_in[day] += qty
+        else:
+            week_out[day] += qty
+
+    weekly_movement = {
+        "labels": week_labels,
+        "stock_in": week_in,
+        "stock_out": week_out,
+    }
+
+    # ---------- MONTHLY movement (for big line chart, last 12 months) ----------
+    now = datetime.now()
+    months = []
+    for i in range(11, -1, -1):
+        first_of_month = (now.replace(day=1) - timedelta(days=30 * i))
+        months.append((first_of_month.year, first_of_month.month))
+
+    month_labels = [
+        datetime(y, m, 1).strftime("%b %Y")
+        for (y, m) in months
+    ]
+    month_in = [0] * 12
+    month_out = [0] * 12
+
+    oldest_year, oldest_month = months[0]
+    since = datetime(oldest_year, oldest_month, 1)
+
+    # use the same movements but aggregated per month
+    usage_all = list(consumption_collection.find({"date": {"$gte": since}}))
+    for u in usage_all:
+        d = u.get("date")
+        if isinstance(d, str):
+            d = datetime.fromisoformat(d)
+        ym = (d.year, d.month)
+        if ym not in months:
+            continue
+        idx = months.index(ym)
+        qty = u.get("quantity_used", 1)
+        if u.get("direction") == "in":
+            month_in[idx] += qty
+        else:
+            month_out[idx] += qty
+
+    monthly_movement = {
+        "labels": month_labels,
+        "stock_in": month_in,
+        "stock_out": month_out,
+    }
+
+    # ---------- Low stock table & top products ----------
+    low_stock_rows = list(inventory_collection.find(
+        {"$expr": {"$lte": ["$quantity", "$reorder_level"]}},
+        {"_id": 0, "name": 1, "quantity": 1},
+    ))
+
+    top_products = list(consumption_collection.aggregate([
+        {"$group": {"_id": "$name", "used": {"$sum": "$quantity_used"}}},
+        {"$sort": {"used": -1}},
+        {"$limit": 5},
+    ]))
+
+    return {
+        "overview": overview,
+        "movement": weekly_movement,          # weekly for small chart
+        "movement_monthly": monthly_movement, # monthly for big chart
+        "low_stock": low_stock_rows,
+        "top_products": top_products,
+    }
+
+
+def analytics_broadcaster():
+    while True:
+        try:
+            payload = build_analytics_payload()
+            print("SOCKET ANALYTICS PAYLOAD:", payload)
+            socketio.emit("analytics_update", payload, namespace="/analytics")
+        except Exception as e:
+            print("Analytics broadcaster error:", e)
+        time.sleep(5)
+
+
+@socketio.on("connect", namespace="/analytics")
+def analytics_connect():
+    print("Client connected to analytics")
 
 
 # ---------- Run server ----------
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    t = threading.Thread(target=analytics_broadcaster, daemon=True)
+    t.start()
+    socketio.run(app, debug=True)
